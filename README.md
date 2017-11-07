@@ -11,8 +11,11 @@ After extracting the zip and moving the files to your server, you just need to a
 It is recommended that you setup groups instead of just allowing everyone (777), so instead you may want to do something like:
 > sudo chown -R www-data:www-data /var/www/mysite/gallery/
 
-
 > sudo chmod -R 775 /var/www/mysite/gallery/
+
+The photo gallery relies on gdlib. If your server does not already have it installed, you may be able to install it with the following command:
+
+>sudo apt-get install php7.0-gd
 
 **Note.** The above is just an example, the exact steps required on your own setup might be different. Some shared hosts will not need any modifications to permissions. In addition, you might also need to adjust the **upload_max_filesize** and **post_max_size** settings in _php.ini_. Have fun!
 
