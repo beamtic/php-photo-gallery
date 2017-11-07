@@ -6,7 +6,12 @@ There is a live demo available at the website.
 ## Installation
 Installing the photo gallery is simple. You can either download a **.7z** file from the project website (phpphotogallery.com), or you can clone this git repository.
 
-After extracting the zip and moving the files to your server, you just need to add the usual permissions with **chmod**. _*I.e:* chmod 777 /var/www/mysite/gallery_
+After extracting the zip and moving the files to your server, you just need to add the usual permissions with **chmod**. _*I.e:* chmod 777 -R /var/www/mysite/gallery/_
+
+It is recommended that you setup groups instead of just allowing everyone (777), so instead you may want to do something like:
+> sudo chown -R www-data:www-data /var/www/mysite/gallery/
+> sudo chmod -R 775 /var/www/mysite/gallery/
+
 
 [PHP Photo Gallery](https://phpphotogallery.com/)
 
