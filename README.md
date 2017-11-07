@@ -3,6 +3,13 @@
 
 There is a live demo available at the website.
 
+## Requirements
+The gallery requires GD library to, among other things, create thumbnails from uploaded images. Some hosts will already have this installed by default. If your host does not have it installed, it is recommend you either shift to cloud hosting, or find a shared host that does have it installed.
+
+Some hosts already handle permissions by default, others will not. In the latter case, you will have to change permissions on your own (I.e.: chown & chmod). If this is not possible, change to another hosting provider!
+
+You might also need to change the **upload_max_filesize** and **post_max_size** in php.ini, but again, sometimes your hosting will already allow you to upload larger files. Obviously, it is bad to upload big image files because they generally take too long time to load, and they will slow down the gallery for your visitors. It is recommended you resize images before uploading.
+
 ## Installation
 Installing the photo gallery is simple. You can either download a **.7z** file from the project website (phpphotogallery.com), or you can clone this git repository.
 
