@@ -1,8 +1,8 @@
 <?php
-$settings = array();
-$settings['install_dir'] = 'gallery/';
+define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'settings.php';
+
+require BASE_PATH . 'settings.php';
 $requested_category='';$requested_file='';
 $html_title = 'Viewer';
 $html_content = '';$category_items='';$html_backlink='';
@@ -60,8 +60,8 @@ if (
 // ====================
 
 function list_files($settings) {
-    $directory = $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . $_GET['category'];
-    $thumbs_directory = $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'thumbnails/' . $_GET['category'];
+    $directory = BASE_PATH . $_GET['category'];
+    $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];
     $item_arr = array_diff(scandir($directory), array('..', '.'));
     foreach ($item_arr as $key => $value) {
         if (is_dir($directory . '/' . $value)) {
@@ -123,5 +123,5 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
     }
 }
 
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'templates/default/viewer_template.php';
+require BASE_PATH . 'templates/'.$template.'/viewer_template.php';
 

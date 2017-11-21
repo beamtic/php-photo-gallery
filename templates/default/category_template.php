@@ -9,11 +9,7 @@
  <body>
   <header id="site_header">
    <h1><?php echo $settings['title']; ?></h1>
-   <nav>
-    <ol>
-     <li><a href="/">HOME</a></li>
-    </ol>
-   </nav>
+   <nav><?php echo $HTML_navigation; ?></nav>
    <div class="clear"></div>
   </header>
   <article>

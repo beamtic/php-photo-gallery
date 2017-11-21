@@ -13,19 +13,13 @@
    <h1><?php echo $settings['title']; ?></h1>
    <nav>
     <ol>
-     <li><a href="/">HOME</a></li>
+     <nav><?php echo $HTML_navigation; ?></nav>
     </ol>
    </nav>
    <div class="clear"></div>
   </header>
   <article>
-    <form action="upload.php" method="post" enctype="multipart/form-data" id="uploadForm">
-      <label>Upload file:</label>
-      <input type="file" name="fileToUpload" id="fileToUpload">
-      <label>Place in category:</label>
-      <?php echo $select_category; ?>
-      <button class="button" onClick="uploadFile()" type="button">Upload</button>
-    </form>
+   <?php echo $HTML_article_content; ?>
   </article>
   <footer>
    <nav>

@@ -1,8 +1,7 @@
 <?php
-$settings = array();
-$settings['install_dir'] = 'gallery/';
+define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'settings.php';
+require BASE_PATH . 'settings.php';
 
 session_start();
 session_cache_limiter("private_no_expire");
@@ -73,7 +72,7 @@ if ($uploadOk == 0) {
     }
 }
 
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'templates/default/upload_template.php';
+require BASE_PATH . 'templates/'.$template.'/upload_template.php';
 
 
 

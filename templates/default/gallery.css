@@ -1,9 +1,9 @@
 * {margin: 0;padding: 0;}
-body {color:rgb(100,100,100);background:rgb(252,252,252)}
+body {color:rgb(100,100,100);background:rgb(252,252,252);overflow-y:scroll;}
 header h1::first-letter {text-transform:uppercase;}
 article ul {display:flex;flex-wrap:wrap;flex-basis:220px;}
 article li img {width:100%;border-radius:10px;}
-#images li {width:220px;margin:0 0.5em 1.5em;border-radius:10px;overflow:hidden;height:220px;}
+#images li {width:220px;margin:0 0.5em 1.5em;border-radius:10px;overflow:hidden;height:220px;position:relative;}
 #categories li div {position:relative;margin:0 1em 0 0;width:150px;height:150px;border-radius:50%;
 font-weight:bold;text-transform:uppercase;
 border:1px solid rgb(250,200,200);background:rgb(251,251,251);text-align:center;}
@@ -33,5 +33,13 @@ input + label {display:block;margin:1em;}
 .button:active {color:#fff;}
 .button:focus {outline:none;}
 
+.delete {position:absolute;display:block;top:5px;right:5px;z-index:20;width:2em;height:2em;background: rgba(250,250,250,0.5);padding:0.2em;border-radius:0.3em;}
+.delete img {width:100%;height:100%;}
 .delete img:hover {filter:grayscale(100%);}
+
+.flexbox {display:flex;flex-basis:400px;flex-wrap:wrap;justify-content:center;}
+.column {}
+header .flexbox li {margin:0 0.5em;}
+#action_status_message {padding:1em 1em 0;margin:1em auto;background:rgba(210,210,210,0.5);width:100%;font-size:1.4em;}
+
 

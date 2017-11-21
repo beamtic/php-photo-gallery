@@ -1,20 +1,24 @@
 <?php
-$settings = array();
-$settings['install_dir'] = 'gallery/';
+// Remove trailing slashes (if present), and add one manually.
+// Note: This avoids a problem where some servers might add a trailing slash, and others not..
+define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'settings.php';
-
+require BASE_PATH . 'settings.php'; // Note. Include a file in same directory without slash in front of it!
+require BASE_PATH . '_lib_/translator_class.php';
+$translator = new translator($settings['lang']);
 session_start();
 // <<<<<<<<<<<<<<<<<<<<
 // Validate the _GET category input for security and error handling
 // >>>>>>>>>>>>>>>>>>>>
+$HTML_navigation = '<li><a href="/">'.$translator->string('Home').'</a></li>';
 
 if (isset($_GET['category'])) {
-  if (preg_match("/^[a-z]+$/i", $_GET['category'])) {
+  $HTML_navigation .= '<li><a href="index.php">'.$translator->string('Categories').'</a></li>';
+  if (preg_match("/^[a-zæøåÆØÅ]+$/i", $_GET['category'])) {
     $requested_category = $_GET['category'];
     if (isset($ignored_categories_and_files["$requested_category"])) {
       header("HTTP/1.0 500 Internal Server Error");
-      echo '<!doctype html><html><head></head><body><h1>Error</h1><p>This is not a file or category...</p></body></html>';
+      echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('This is not a file or category...').'</p></body></html>';
       exit();
     }
     // <<<<<<<<<<<<<<<<<<<<
@@ -33,7 +37,7 @@ if (isset($_GET['category'])) {
         }
         $HTML_cup .= '</ul>';
     } else {
-        $HTML_cup = '<p>There are no files in: <b>' . $requested_category . '</b></p>';
+        $HTML_cup = '<p>'.$translator->string('There are no files in:').' <b>' . $requested_category . '</b></p>';
     }
   } else {
     header("HTTP/1.0 500 Internal Server Error");
@@ -45,7 +49,7 @@ if (isset($_GET['category'])) {
     // Fetch categories, and include them in an HTML ul list
     // >>>>>>>>>>>>>>>>>>>>
   $requested_category = 'Categories';
-  $categories = list_directories($settings, $ignored_categories_and_files);
+  $categories = list_directories($ignored_categories_and_files);
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
     foreach ($categories as &$category_name) {
@@ -53,16 +57,17 @@ if (isset($_GET['category'])) {
     }
     $HTML_cup .= '</ul>';
   } else {
-    $HTML_cup = '<p>There are no categories yet...</p>';
+    $HTML_cup = '<p>'.$translator->string('There are no categories yet...').'</p>';
   }
 }
+$HTML_navigation = '<ol class="flexbox">'.$HTML_navigation.'</ol>';
 
 // ====================
 // Functions
 // ====================
 function list_files($settings, $ignored_categories_and_files) {
-  $directory = $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . $_GET['category'];
-  $thumbs_directory = $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'thumbnails/' . $_GET['category'];
+  $directory = BASE_PATH . $_GET['category'];
+  $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];
   $item_arr = array_diff(scandir($directory), array('..', '.'));
   foreach ($item_arr as $key => $value) {
       if ((is_dir($directory . '/' . $value)) || (isset($ignored_categories_and_files["$value"]))) {
@@ -76,11 +81,10 @@ function list_files($settings, $ignored_categories_and_files) {
   }
   return $item_arr;
 }
-function list_directories($settings, $ignored_categories_and_files) {
-    $directory = $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'];
-    $item_arr = array_diff(scandir($directory), array('..', '.'));
+function list_directories($ignored_categories_and_files) {
+    $item_arr = array_diff(scandir(BASE_PATH), array('..', '.'));
     foreach ($item_arr as $key => $value) {
-        if ((is_dir($directory . '/' . $value)==false) || (isset($ignored_categories_and_files["$value"]))) {unset($item_arr["$key"]);}
+        if ((is_dir(BASE_PATH . '/' . $value)==false) || (isset($ignored_categories_and_files["$value"]))) {unset($item_arr["$key"]);}
     }
     return $item_arr;
 }
@@ -91,7 +95,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
     $source_filetype = exif_imagetype($path_to_source_file);
     if(file_exists($thumbs_directory) !== true) {
         if (!mkdir($thumbs_directory, 0777, true)) {
-            echo 'Error: The thumbnails directory could not be created.';exit();
+            echo $translator->string('Error: The thumbnails directory could not be created.');exit();
         }
     }
     // Create the thumbnail ----->>>>
@@ -128,7 +132,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
             imagegif($image_p, $path_to_thumb_file);
             break;
         default:
-            echo 'Unknown filetype. Supported filetypes are: JPG, PNG og GIF.';exit();
+            echo $translator->string('Unknown filetype. Supported filetypes are: JPG, PNG og GIF.');exit();
     }
 }
-require $_SERVER["DOCUMENT_ROOT"] . $settings['install_dir'] . 'templates/default/category_template.php';
+require BASE_PATH . 'templates/'.$template.'/category_template.php';
