@@ -30,12 +30,22 @@ if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
 // ADMIN ACTIONS (Available when logged in)
 // >>>>>>>>>>>>>>>
 if (isset($_GET['delete'])) {
-  if (!is_dir($_GET['delete'])) {
-    unlink($_GET['delete']);
-    $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $_GET['delete'] .'</b></p>';
+  $delete_this = $_GET['delete'];
+  if (!is_dir($delete_this)) {
+    if (file_exists($delete_this)) {
+      // echo 'thumbnails/thumb-'.$_GET['delete'];exit();
+      unlink($delete_this); // Delete file
+      $delete_this_thumb = str_lreplace('/', '/thumb-', $delete_this);
+      if (file_exists($delete_this_thumb)) {
+        unlink('thumbnails/'.$delete_this_thumb); // Delete thumbnail
+      }
+      $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
+    } else {
+        $action_status_message = '<p>' . $translator->string('File does not exist:') . ' <b>'. $delete_this .'</b></p>';
+    }
   } else {
     rmdir($_GET['delete']);
-    $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $_GET['delete'] .'</b></p>';
+    $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $delete_this .'</b></p>';
   }
   
 } elseif (isset($_POST['add_category'])) {
@@ -43,10 +53,13 @@ if (isset($_GET['delete'])) {
       $add_category = $_POST['add_category'];
       $add_category = trim($_POST['add_category']);
       $add_category = space_or_dash(' ', $add_category); // Convert space to dash
+      $add_category = strtolower($add_category);
       
       $add_category = BASE_PATH . $add_category;
       if (!file_exists($add_category)) {
-        mkdir($add_category, 775);
+        mkdir($add_category, 0777);
+        chmod($add_category, 0777); // We need to change permissions of the directory using chmod
+                                    // after creating the directory, on some hosts
         $action_status_message = '<p>' . $translator->string('Created category:') .' <b>'. $_POST['add_category'] .'</b></p>';
       } else {
         $action_status_message = '<p><b>'.$_POST['add_category'] .'</b> '. $translator->string('already exists.') . '</p>';
@@ -117,6 +130,13 @@ function list_dirs() {
     }
   }
   return $item_arr;
+}
+function str_lreplace($search, $replace, $subject) {
+  $pos = strrpos($subject, $search);
+  if($pos !== false){
+    $subject = substr_replace($subject, $replace, $pos, strlen($search));
+  }
+  return $subject;
 }
 
 header("Cache-Control: no cache");
