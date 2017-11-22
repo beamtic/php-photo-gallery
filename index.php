@@ -14,7 +14,7 @@ $HTML_navigation = '<li><a href="/">'.$translator->string('Home').'</a></li>';
 
 if (isset($_GET['category'])) {
   $HTML_navigation .= '<li><a href="index.php">'.$translator->string('Categories').'</a></li>';
-  if (preg_match("/^[a-zæøåÆØÅ]+$/i", $_GET['category'])) {
+  if (preg_match("/^[a-zæøåÆØÅ-]+$/i", $_GET['category'])) {
     $requested_category = $_GET['category'];
     if (isset($ignored_categories_and_files["$requested_category"])) {
       header("HTTP/1.0 500 Internal Server Error");
@@ -37,7 +37,7 @@ if (isset($_GET['category'])) {
         }
         $HTML_cup .= '</ul>';
     } else {
-        $HTML_cup = '<p>'.$translator->string('There are no files in:').' <b>' . $requested_category . '</b></p>';
+        $HTML_cup = '<p>'.$translator->string('There are no files in:').' <b>' . space_or_dash('-', $requested_category) . '</b></p>';
     }
   } else {
     header("HTTP/1.0 500 Internal Server Error");
@@ -53,7 +53,7 @@ if (isset($_GET['category'])) {
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
     foreach ($categories as &$category_name) {
-      $HTML_cup .= '<li><div><a href="index.php?category='.$category_name.'" class="">'.$category_name.'</a></div></li>';
+        $HTML_cup .= '<li><div><a href="index.php?category='.$category_name.'" class="">'.space_or_dash('-', $category_name).'</a></div></li>';
     }
     $HTML_cup .= '</ul>';
   } else {
@@ -65,6 +65,13 @@ $HTML_navigation = '<ol class="flexbox">'.$HTML_navigation.'</ol>';
 // ====================
 // Functions
 // ====================
+function space_or_dash($replace_this='-', $in_this) {
+  if ($replace_this=='-') {
+    return preg_replace('/([-]+)/', ' ', $in_this);
+  } elseif ($replace_this==' ') {
+    return preg_replace('/([ ]+)/', '-', $in_this);
+  }
+}
 function list_files($settings, $ignored_categories_and_files) {
   $directory = BASE_PATH . $_GET['category'];
   $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];

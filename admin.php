@@ -39,16 +39,20 @@ if (isset($_GET['delete'])) {
   }
   
 } elseif (isset($_POST['add_category'])) {
-  if(!preg_match("/^[a-zæøåÆØÅ0-9]+$/i", $_POST['add_category'])) {
-      $action_status_message = '<p>' . $translator->string('Invalid category name:') .' <b>'. $_POST['add_category'] .'</b></p>';
-  }
-    
-  $add_category = BASE_PATH . $_POST['add_category'];
-  if (!file_exists($add_category)) {
-    mkdir($add_category, 775);
-    $action_status_message = '<p>' . $translator->string('Created category:') .' <b>'. $_POST['add_category'] .'</b></p>';
+  if(preg_match("/^[a-zæøåÆØÅ0-9 ]+$/i", $_POST['add_category'])) {
+      $add_category = $_POST['add_category'];
+      $add_category = trim($_POST['add_category']);
+      $add_category = space_or_dash(' ', $add_category); // Convert space to dash
+      
+      $add_category = BASE_PATH . $add_category;
+      if (!file_exists($add_category)) {
+        mkdir($add_category, 775);
+        $action_status_message = '<p>' . $translator->string('Created category:') .' <b>'. $_POST['add_category'] .'</b></p>';
+      } else {
+        $action_status_message = '<p><b>'.$_POST['add_category'] .'</b> '. $translator->string('already exists.') . '</p>';
+      }
   } else {
-    $action_status_message = '<p><b>'.$_POST['add_category'] .'</b> '. $translator->string('already exists.') . '</p>';
+    $action_status_message = '<p>' . $translator->string('Invalid category name:') .' <b>'. $_POST['add_category'] .'</b></p>';
   }
 }
 if (!empty($action_status_message)) {
@@ -66,7 +70,7 @@ foreach ($categories as &$value) {
    $selected=" selected";
   } else {$selected = '';}
   if (!isset($ignored_categories_and_files["$value"])) {
-    $select_category .= '<option value="'.$value.'"'.$selected.'>'.$value.'</option>';
+      $select_category .= '<option value="'.$value.'"'.$selected.'>'.space_or_dash('-', $value).'</option>';
   }
 }
 $select_category .= '</select>';
@@ -98,6 +102,13 @@ $HTML_navigation .= '<li><a href="index.php">'.$translator->string('Categories')
 $HTML_navigation = '<ol class="flexbox">'.$HTML_navigation.'</ol>';
 
 // :::Functions:::
+function space_or_dash($replace_this='-', $in_this) {
+    if ($replace_this=='-') {
+      return preg_replace('/([-]+)/', ' ', $in_this);
+    } elseif ($replace_this==' ') {
+      return preg_replace('/([ ]+)/', '-', $in_this);
+    }
+}
 function list_dirs() {
   $item_arr = array_diff(scandir(BASE_PATH), array('..', '.'));
   foreach ($item_arr as $key => $value) {
