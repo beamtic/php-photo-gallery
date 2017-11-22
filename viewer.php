@@ -10,7 +10,7 @@ $next_file=false;$previous_file=false;
 
 if (
     (isset($_GET['category'])) &&
-    (preg_match("/^[a-zA-Z0-9]+$/", $_GET['category'])) &&
+    (preg_match("/^[a-zA-ZæøåÆØÅ0-9-]+$/", $_GET['category'])) &&
     ($_GET['category'] !== 'thumbnails')) {
         
     if ((isset($_GET['filename'])) && (preg_match("/^[^\/]+$/", $_GET['filename']))) {  
