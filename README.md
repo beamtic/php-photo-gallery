@@ -1,5 +1,5 @@
 # PHP Photo Gallery
-**Beamtic PHP Gallery** takes advantage of PHP's build-in capabilities and [file-handling](https://beamtic.com/files-and-directories-php) to create a modern image gallery, allowing us to create categories, upload images, and organize them into categories.
+**Beamtic PHP Gallery** takes advantage of PHP's build-in capabilities and file-handling to create a modern image gallery, allowing us to create categories, upload images, and organize them into categories.
 
 There is a live demo available at the website.
 
@@ -26,5 +26,6 @@ The photo gallery relies on gdlib. If your server does not already have it insta
 
 **Note.** The above is just an example, the exact steps required on your own setup might be different. Some shared hosts will not need any modifications to permissions. In addition, you might also need to adjust the **upload_max_filesize** and **post_max_size** settings in _php.ini_. Have fun!
 
-[PHP Photo Gallery](https://phpphotogallery.com/)
+Links:
+https://phpphotogallery.com/ – PHP Photo Gallery Homepage
 
