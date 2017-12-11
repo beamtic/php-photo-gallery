@@ -26,6 +26,7 @@ The photo gallery relies on gdlib. If your server does not already have it insta
 
 **Note.** The above is just an example, the exact steps required on your own setup might be different. Some shared hosts will not need any modifications to permissions. In addition, you might also need to adjust the **upload_max_filesize** and **post_max_size** settings in _php.ini_. Have fun!
 
-Links:
+## Links:
+
 https://phpphotogallery.com/ – PHP Photo Gallery Homepage
 
