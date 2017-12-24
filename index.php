@@ -53,6 +53,8 @@ if (isset($_GET['category'])) {
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
     foreach ($categories as &$category_name) {
+        $category_preview_images = category_previews($category_name, $ignored_categories_and_files);
+        echo $category_preview_images;exit(); // Testing category views
         $HTML_cup .= '<li><div><a href="index.php?category='.$category_name.'" class="">'.space_or_dash('-', $category_name).'</a></div></li>';
     }
     $HTML_cup .= '</ul>';
@@ -87,6 +89,19 @@ function list_files($settings, $ignored_categories_and_files) {
     }
   }
   return $item_arr;
+}
+function category_previews($category, $ignored_categories_and_files) {
+    $thumbs_directory = BASE_PATH . 'thumbnails/' . $category;
+    $item_arr = array_diff(scandir($directory), array('..', '.'));
+    $previews_html = '';
+    foreach ($item_arr as $key => $value) {
+      if ((is_dir($thumbs_directory . '/' . $value)) || (isset($ignored_categories_and_files["$value"]))) {
+        unset($item_arr["$key"]);
+      } else {
+        $previews_html = '<div style="background:url('.$item_arr["$key"].');width:25%;height:25%;" class="category_preview_img"></div>';
+      }
+    }
+    return $previews_html;
 }
 function list_directories($ignored_categories_and_files) {
     $item_arr = array_diff(scandir(BASE_PATH), array('..', '.'));
