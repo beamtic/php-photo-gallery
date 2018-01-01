@@ -31,7 +31,7 @@ if (isset($_GET['category'])) {
             if (isset($_SESSION["password"])) {
                 $delete_control = '<a href="admin.php?delete='.$requested_category .'/'. $file_name.'" class="delete"><img src="delete.png" alt="delete" style="width:30px;height:30px;"></a>';
             } else {$delete_control='';}
-            $thumb_file_location = 'thumbnails/' . $requested_category . '/thumb-' . $file_name;
+            $thumb_file_location = 'thumbnails/' . $requested_category . '/thumb-' . rawurlencode($file_name);
             $source_file_location = $requested_category . '/' . $file_name;
             $HTML_cup .= '<li><a href="viewer.php?category='.$requested_category.'&filename='.$file_name.'"><img src="'.$thumb_file_location.'" alt="'.$file_name.'"></a>'.$delete_control.'</li>';
         }
@@ -98,7 +98,7 @@ function category_previews($category, $ignored_categories_and_files) {
       // if ((is_dir($thumbs_directory . '/' . $value)) || (isset($ignored_categories_and_files["$value"]))) {
         // unset($item_arr["$key"]);
       // } else {
-        $previews_html = '<div style="background:url(thumbnails/'.$category.'/'.$item_arr["$key"].');" class="category_preview_img"></div>'; // add a dot in front of = to return all images
+        $previews_html = '<div style="background:url(thumbnails/'.$category.'/'.rawurlencode($item_arr["$key"]).');" class="category_preview_img"></div>'; // add a dot in front of = to return all images
       //}
     }
     return $previews_html;
