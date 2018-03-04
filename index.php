@@ -52,7 +52,7 @@ if (isset($_GET['category'])) {
     // <<<<<<<<<<<<<<<<<<<<
     // Fetch categories, and include them in an HTML ul list
     // >>>>>>>>>>>>>>>>>>>>
-  $requested_category = 'Categories';
+  $requested_category = $translator->string('Categories');
   $categories = list_directories($ignored_categories_and_files);
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
