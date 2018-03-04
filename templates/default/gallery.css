@@ -37,9 +37,11 @@ input + label {display:block;margin:1em;}
 .button:active {color:#fff;}
 .button:focus {outline:none;}
 
-.delete {position:absolute;display:block;top:5px;right:5px;z-index:20;width:2em;height:2em;background: rgba(250,250,250,0.5);padding:0.2em;border-radius:0.3em;}
+.delete, .preview {position:absolute;display:block;top:5px;z-index:20;width:2em;height:2em;background: rgba(250,250,250,0.5);padding:0.2em;border-radius:0.3em;}
+.delete {right:5px;}
+.preview {right:3.2em;}
 .delete img {width:100%;height:100%;}
-.delete img:hover {filter:grayscale(100%);}
+.delete img:hover, .preview img:hover {filter:grayscale(100%);}
 
 .flexbox {display:flex;flex-basis:400px;flex-wrap:wrap;justify-content:center;}
 .column {}

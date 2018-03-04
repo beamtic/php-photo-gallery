@@ -7,8 +7,10 @@ require BASE_PATH . '_lib_/translator_class.php';
 $action_status_message = '';
 $translator = new translator($settings['lang']);
 
-session_start();
-session_cache_limiter("private_no_expire");
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    session_cache_limiter("private_no_expire");
+}
 if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ((isset($_POST["password"])) && (md5($_POST["password"]) == $password)) {
@@ -36,7 +38,7 @@ if (isset($_GET['delete'])) {
       // echo 'thumbnails/thumb-'.$_GET['delete'];exit();
       unlink($delete_this); // Delete file
       $delete_this_thumb = str_lreplace('/', '/thumb-', $delete_this);
-      if (file_exists($delete_this_thumb)) {
+      if (file_exists('thumbnails/'.$delete_this_thumb)) {
         unlink('thumbnails/'.$delete_this_thumb); // Delete thumbnail
       }
       $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
@@ -67,6 +69,21 @@ if (isset($_GET['delete'])) {
   } else {
     $action_status_message = '<p>' . $translator->string('Invalid category name:') .' <b>'. $_POST['add_category'] .'</b></p>';
   }
+} elseif ((isset($_GET['category'])) && (isset($_GET['set_preview_image']))) {
+    // SET CATEGORY PREVIEW
+    $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];
+    
+    if (file_exists($thumbs_directory . '/' . $category_json_file)) {
+        $category_data = json_decode(file_get_contents($thumbs_directory . '/'. $category_json_file), true);
+        $category_data['preview_image'] = 'thumb-'.$_GET['set_preview_image'];
+    } else {
+        $category_data = array('preview_image' => 'thumb-'.$_GET['set_preview_image']);
+    }
+    
+    $category_data = json_encode($category_data);
+    file_put_contents($thumbs_directory . '/' . $category_json_file, $category_data);
+    
+    $action_status_message = '<p>'.$translator->string('The category preview image was changed in: ') .'<b>'.$_GET['category'].'</b></p>';
 }
 if (!empty($action_status_message)) {
     $action_status_message = '<div id="action_status_message">' . $action_status_message . '</div>';

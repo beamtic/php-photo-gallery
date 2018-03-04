@@ -6,7 +6,10 @@ define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 require BASE_PATH . 'settings.php'; // Note. Include a file in same directory without slash in front of it!
 require BASE_PATH . '_lib_/translator_class.php';
 $translator = new translator($settings['lang']);
-session_start();
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    session_cache_limiter("private_no_expire");
+}
 // <<<<<<<<<<<<<<<<<<<<
 // Validate the _GET category input for security and error handling
 // >>>>>>>>>>>>>>>>>>>>
@@ -30,10 +33,11 @@ if (isset($_GET['category'])) {
         foreach ($files as &$file_name) {
             if (isset($_SESSION["password"])) {
                 $delete_control = '<a href="admin.php?delete='.$requested_category .'/'. $file_name.'" class="delete"><img src="delete.png" alt="delete" style="width:30px;height:30px;"></a>';
-            } else {$delete_control='';}
+                $category_preview_control = '<a href="admin.php?category='.$requested_category .'&set_preview_image='.$file_name.'" class="preview"><img src="preview.png" alt="set preview image" style="width:30px;height:30px;"></a>';
+            } else {$delete_control='';$category_preview_control='';}
             $thumb_file_location = 'thumbnails/' . $requested_category . '/thumb-' . rawurlencode($file_name);
             $source_file_location = $requested_category . '/' . $file_name;
-            $HTML_cup .= '<li><a href="viewer.php?category='.$requested_category.'&filename='.$file_name.'"><img src="'.$thumb_file_location.'" alt="'.$file_name.'"></a>'.$delete_control.'</li>';
+            $HTML_cup .= '<li><a href="viewer.php?category='.$requested_category.'&filename='.$file_name.'"><img src="'.$thumb_file_location.'" alt="'.$file_name.'"></a>'.$delete_control.$category_preview_control.'</li>';
         }
         $HTML_cup .= '</ul>';
     } else {
@@ -53,7 +57,7 @@ if (isset($_GET['category'])) {
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
     foreach ($categories as &$category_name) {
-        $category_preview_images = category_previews($category_name, $ignored_categories_and_files);
+        $category_preview_images = category_previews($category_name, $ignored_categories_and_files, $category_json_file);
         // echo 'cats:'.$category_preview_images; // Testing category views
         $HTML_cup .= '<li><div class="preview_images">'.$category_preview_images.'</div><div class="category"><a href="index.php?category='.$category_name.'" class=""><span>'.space_or_dash('-', $category_name).'</span></a></div></li>';
     }
@@ -90,16 +94,30 @@ function list_files($settings, $ignored_categories_and_files) {
   }
   return $item_arr;
 }
-function category_previews($category, $ignored_categories_and_files) {
+function category_previews($category, $ignored_categories_and_files, $category_json_file) {
     $thumbs_directory = BASE_PATH . 'thumbnails/' . $category;
-    $item_arr = array_diff(scandir($thumbs_directory), array('..', '.'));
     $previews_html = '';
-    foreach ($item_arr as $key => $value) {
-      // if ((is_dir($thumbs_directory . '/' . $value)) || (isset($ignored_categories_and_files["$value"]))) {
-        // unset($item_arr["$key"]);
-      // } else {
-        $previews_html = '<div style="background:url(thumbnails/'.$category.'/'.rawurlencode($item_arr["$key"]).');" class="category_preview_img"></div>'; // add a dot in front of = to return all images
-      //}
+    
+    if (file_exists($thumbs_directory)) {
+
+      if (file_exists($thumbs_directory . '/' . $category_json_file)) {
+        $category_data = json_decode(file_get_contents($thumbs_directory . '/'. $category_json_file), true);
+        
+        $previews_html = '<div style="background:url(thumbnails/'.$category.'/'.rawurlencode($category_data['preview_image']).');" class="category_preview_img"></div>';
+        
+      } else {
+        // Automatically try to select preview image if none was choosen
+        $item_arr = array_diff(scandir($thumbs_directory), array('..', '.'));
+        foreach ($item_arr as $key => $value) {
+        // if ((is_dir($thumbs_directory . '/' . $value)) || (isset($ignored_categories_and_files["$value"]))) {
+          // unset($item_arr["$key"]);
+        // } else {
+          $previews_html = '<div style="background:url(thumbnails/'.$category.'/'.rawurlencode($item_arr["$key"]).');" class="category_preview_img"></div>'; // add a dot in front of = to return all images
+        //}
+        }
+        $category_data = json_encode(array('preview_image' => $item_arr["$key"]));
+        file_put_contents($thumbs_directory . '/' . $category_json_file, $category_data);
+      }
     }
     return $previews_html;
 }
@@ -117,10 +135,10 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
     $source_filetype = exif_imagetype($path_to_source_file);
     if(file_exists($thumbs_directory) !== true) {
         if (!mkdir($thumbs_directory, 0777, true)) {
-            echo $translator->string('Error: The thumbnails directory could not be created.');exit();
+          echo $translator->string('Error: The thumbnails directory could not be created.');exit();
         } else {
-          chmod($add_category, 0777); // We need to change permissions of the directory using chmod
-                                      // after creating the directory, on some hosts
+          chmod($thumbs_directory, 0777); // On some hosts, we need to change permissions of the directory using chmod
+                                          // after creating the directory
         }
     }
     // Create the thumbnail ----->>>>

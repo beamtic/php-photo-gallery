@@ -3,8 +3,11 @@ define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
 require BASE_PATH . 'settings.php';
 
-session_start();
-session_cache_limiter("private_no_expire");
+if(session_status() == PHP_SESSION_NONE){
+    session_start();
+    session_cache_limiter("private_no_expire");
+}
+
 if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ((isset($_POST["password"])) && (md5($_POST["password"]) == $password)) {
@@ -65,7 +68,6 @@ if ($uploadOk == 0) {
         $message = "<p>". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.</p>";
         $message .= '<p><a href="admin.php" class="button">Upload another file</a></p>';
         $message .= '<p><a href="index.php?category='.$upload_category.'">Go to: '.$upload_category.'</a></p>';
-        session_start();
         $_SESSION["selected_category"] = $upload_category;
     } else {
         $message ="<p>Error uploading file.</p>";
