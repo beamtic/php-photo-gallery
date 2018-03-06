@@ -36,18 +36,23 @@ if (isset($_GET['delete'])) {
   if (!is_dir($delete_this)) {
     if (file_exists($delete_this)) {
       // echo 'thumbnails/thumb-'.$_GET['delete'];exit();
-      unlink($delete_this); // Delete file
-      $delete_this_thumb = str_lreplace('/', '/thumb-', $delete_this);
-      if (file_exists('thumbnails/'.$delete_this_thumb)) {
-        unlink('thumbnails/'.$delete_this_thumb); // Delete thumbnail
+      if(!simple_delete($delete_this)) {
+        $action_status_message = '<p>' . $translator->string('Possible problem with file permissions, or directory does not exist.') .'</p><p><b>'. $delete_this .'</b></p>';
+      } else {
+        $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
+        $delete_this_thumb = str_lreplace('/', '/thumb-', $delete_this);
+        simple_delete('thumbnails/'.$delete_this_thumb);// Delete thumbnail
       }
-      $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
     } else {
-        $action_status_message = '<p>' . $translator->string('File does not exist:') . ' <b>'. $delete_this .'</b></p>';
+      $action_status_message = '<p>' . $translator->string('File does not exist:') . ' <b>'. $delete_this .'</b></p>';
     }
   } else {
-    rmdir($_GET['delete']);
-    $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $delete_this .'</b></p>';
+      if(!simple_delete($delete_this)) {
+        $action_status_message = '<p>' . $translator->string('Possible problem with file permissions, or directory does not exist.') .'</p><p><b>'. $delete_this .'</b></p>';
+      } else {
+        $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $delete_this .'</b></p>';
+      }
+    simple_delete('thumbnails/'.$delete_this);
   }
   
 } elseif (isset($_POST['add_category'])) {
@@ -122,7 +127,7 @@ $HTML_article_content .= '
     <form action="admin.php" method="post" enctype="multipart/form-data" id="add_categoryForm">
       <label>'.$translator->string("Category name:").'</label>
       <input type="text" name="add_category">
-      <input type="submit" class="button" value="'.$translator->string("Create:").'">
+      <input type="submit" class="button" value="'.$translator->string("Create").'">
     </form>
   </section>
 </div>';
@@ -154,6 +159,28 @@ function str_lreplace($search, $replace, $subject) {
     $subject = substr_replace($subject, $replace, $pos, strlen($search));
   }
   return $subject;
+}
+function simple_delete($file_or_dir) {
+  if (is_writable($file_or_dir)) { // Check if directory/file is writeable (required to delete file)
+    if (is_dir($file_or_dir)) { // If directory, check for subdirectories
+      $objects = scandir($file_or_dir); // Check for contained directories and files
+      foreach ($objects as $object) {
+        if(($object !== '.') && ($object !== '..')) {
+          if (is_dir($file_or_dir.'/'.$object)) { // Handle subdirectories too (if any)
+            simple_delete($file_or_dir.'/'.$object); // If dealing with a subdirectory, perform another simple_delete()
+          } else {
+            if (is_writable($file_or_dir.'/'.$object)) {
+              unlink($file_or_dir.'/'.$object);
+            }
+          }
+        }
+      }
+      rmdir($file_or_dir);
+      return true;
+    } else {
+      unlink($file_or_dir); // simple_delete() also works on single files
+    }
+  } else {return false;}
 }
 
 header("Cache-Control: no cache");

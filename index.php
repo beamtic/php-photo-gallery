@@ -50,16 +50,19 @@ if (isset($_GET['category'])) {
   }
 } else { // If no category was requested
     // <<<<<<<<<<<<<<<<<<<<
-    // Fetch categories, and include them in an HTML ul list
+    // Fetch categories, and include them in a HTML ul list
     // >>>>>>>>>>>>>>>>>>>>
   $requested_category = $translator->string('Categories');
   $categories = list_directories($ignored_categories_and_files);
   if (count($categories) >= 1) {
     $HTML_cup = '<ul id="categories">';
     foreach ($categories as &$category_name) {
+        if (isset($_SESSION["password"])) {
+          $delete_control = '<a href="admin.php?delete='.$category_name.'" class="delete"><img src="delete.png" alt="delete" style="width:30px;height:30px;"></a>';
+        } else {$delete_control='';}
         $category_preview_images = category_previews($category_name, $ignored_categories_and_files, $category_json_file);
         // echo 'cats:'.$category_preview_images; // Testing category views
-        $HTML_cup .= '<li><div class="preview_images">'.$category_preview_images.'</div><div class="category"><a href="index.php?category='.$category_name.'" class=""><span>'.space_or_dash('-', $category_name).'</span></a></div></li>';
+        $HTML_cup .= '<li><div class="preview_images">'.$category_preview_images.'</div><div class="category"><a href="index.php?category='.$category_name.'" class=""><span>'.space_or_dash('-', $category_name).'</span></a></div>'.$delete_control.'</li>';
     }
     $HTML_cup .= '</ul>';
   } else {
