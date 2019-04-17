@@ -13,7 +13,7 @@ if (
     (preg_match("/^[a-zA-ZæøåÆØÅ0-9-]+$/", $_GET['category'])) &&
     ($_GET['category'] !== 'thumbnails')) {
         
-    if ((isset($_GET['filename'])) && (preg_match("/^[^\/]+$/", $_GET['filename']))) {  
+    if ((isset($_GET['filename'])) && (preg_match("/^[^\/\"'<>*]+$/", $_GET['filename']))) {  
         $requested_category = $_GET['category'];$requested_file = $_GET['filename'];
         $html_title = $requested_file . ' - ' . $requested_category . ' | ' .$html_title;
         
@@ -124,4 +124,3 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
 }
 
 require BASE_PATH . 'templates/'.$template.'/viewer_template.php';
-
