@@ -3,6 +3,15 @@
 
 There is a live demo available at the website.
 
+**July 2020:** Just a quick update, since I have seen some use of this software.
+  I have not forgotten about PHP Photo Gallery; I have just been very busy with work..
+  It seems a large re-factor is needed, and I need to synchronize the code more with my File Handler to better handle concurrency.
+  
+  I am now using PHP 7.4, and PHP 8 is due to be released in November. Since I always try to work with the latest version of PHP,
+  there might be some breaking changes coming up. For example, for arrays "[]" instead of "array()", and, also, use of typed properties.
+
+  I am also considering making a Wordpress Plugin for the next update, but I will still maintain the gallery as a stand-alone-project.
+
 ## Requirements
 The gallery requires GD library to, among other things, create thumbnails from uploaded images. Some hosts will already have this installed by default. If your host does not have it installed, it is recommend you either shift to cloud hosting, or find a shared host that does have it installed.
 
