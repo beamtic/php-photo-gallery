@@ -10,13 +10,15 @@ $settings['lang'] = 'en'; // Used to change site language, and on the <html> lan
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
 
-$ignored_categories_and_files = array();
-
-$ignored_categories_and_files['thumbnails'] = true;
-$ignored_categories_and_files['templates'] = true;
-$ignored_categories_and_files['.git'] = true; // Ignore the .git directory if it exists
-$ignored_categories_and_files['category_data.json'] = true; // Used for category preview images and descriptions. Etc.
-$ignored_categories_and_files['_lib_'] = true;
-$ignored_categories_and_files['_translations_'] = true;
+// Files allowed for upload (Check performed in upload.php)
+// Note. that this assumes that the files are trusted and not messed with
+$allowed_file_types_arr = array(
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'webp',
+    'avif',
+);
 
 $category_json_file = 'category_data.json';

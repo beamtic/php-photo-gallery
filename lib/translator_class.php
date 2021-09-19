@@ -13,7 +13,7 @@ class translator {
     public function __construct($lang) {
         $this->install_dir = rtrim(realpath(dirname(__FILE__) . '/../'), "/") . '/';
         $this->gui_lang = $lang;
-        $this->translation_file_path = $this->install_dir.'_translations_/'.$this->gui_lang.'.json';
+        $this->translation_file_path = $this->install_dir.'translations/'.$this->gui_lang.'.json';
     }
     
     public function string($string) {
@@ -53,21 +53,14 @@ class translator {
             // I just hard-code some english errors.. Maybe I should try to fix this dependency conflict later??
             if($fp = fopen($this->translation_file_path, 'w')) {
                 if(!fwrite($fp, json_encode($updated_lang_arr))) {
-                    echo '<p>Error writing translation file. This can be due to permissions.</p>';
-                    echo '<p>This error occurred in: <b>'. __METHOD__ . '</b></p>';
-                    echo '<p>The fwrite path: <b>'. $this->translation_file_path. '</b></p>';
-                    echo '<p>Note. This error message is will not be translated.</p>';
-                    exit();
+                  return false;
                 }
                 unset($updated_lang_arr);
                 fclose($fp);
             } else {
-                echo '<p>Error opening translation file for writing. This can be due to permissions.</p>';
-                echo '<p>This error occurred in: <b>'. __METHOD__ . '</b></p>';
-                echo '<p>The fopen path: <b>'. $this->translation_file_path. '</b></p>';
-                echo '<p>Note. This error message is will not be translated.</p>';
-                exit();
+                return false;
             }
+            return true;
     }
     public function load_translation() {
         if (!file_exists($this->translation_file_path)) {
@@ -85,20 +78,5 @@ class translator {
           unset($loaded_translation_arr);
           return $reformed_translation_arr;
         } else {return false;}
-    }
-    public function show_untranslated() {
-        // $result = $this->dk->query("SELECT * FROM translations WHERE lang = '$this->gui_lang'");
-        // echo $this->gui_lang;exit();
-        if($result) {
-            $untranslated = '<div id="lang_cre"><table><tr><th>'.$this->string('Original:').'</th><th>'.$this->string('Translation:').'</th></tr>';
-            while ($row = $result->fetch_assoc()) {
-                $untranslated .= '<tr>
-      	<td id="string'.$row['id'].'">'.htmlspecialchars($row['string']).'</td>
-      	<td><input type="text" value="'.htmlspecialchars($row['translation']).'" id="translation'.$row['id'].'" placeholder="'.$this->string('Translation').'"></td>
-      	<td><div type="button" onclick=\'QuietSave("translation'.$row['id'].'");\' class="save_button"></div></td></tr>';
-            }
-            $untranslated .= '</table></div>';
-            return $untranslated;
-        }
     }
 }

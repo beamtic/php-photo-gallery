@@ -2,7 +2,7 @@
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
 
-require BASE_PATH . 'settings.php';
+require BASE_PATH . 'includes/settings.php';
 $requested_category='';$requested_file='';
 $html_title = 'Viewer';
 $html_content = '';$category_items='';$html_backlink='';
@@ -10,8 +10,7 @@ $next_file=false;$previous_file=false;
 
 if (
     (isset($_GET['category'])) &&
-    (preg_match("/^[a-zA-ZæøåÆØÅ0-9-]+$/", $_GET['category'])) &&
-    ($_GET['category'] !== 'thumbnails')) {
+    (preg_match("/^[a-zA-ZæøåÆØÅ0-9-]+$/", $_GET['category']))) {
         
     if ((isset($_GET['filename'])) && (preg_match("/^[^\/\"'<>*]+$/", $_GET['filename']))) {  
         $requested_category = $_GET['category'];$requested_file = $_GET['filename'];
@@ -31,7 +30,7 @@ if (
               } else {
                 $file_name = $files["$i"];
                 $thumb_file_location = 'thumbnails/' . $requested_category . '/thumb-' . $file_name;
-                $source_file_location = $requested_category . '/' . $file_name;
+                $source_file_location = 'gallery/'. $requested_category . '/' . $file_name;
                 $category_items .= '<li><div><a href="viewer.php?category='.$requested_category.'&filename='.$file_name.'"><img src="'.$thumb_file_location.'" alt="'.$file_name.'"></a></div></li>';
               }
               ++$i;
@@ -39,7 +38,7 @@ if (
             $category_items .= '</ul>';
         } else {$category_items='';}
         
-        $path_to_file = $requested_category . '/' . $requested_file;
+        $path_to_file = 'gallery/'. $requested_category . '/' . $requested_file;
         
         if($previous_file !== false) {$html_content .= '<div id="previous" class="p"><a href="viewer.php?category='.$requested_category.'&filename='.$previous_file.'">&lt;</a></div>';}
         if($next_file !== false) {$html_content .= '<div id="next"><a href="viewer.php?category='.$requested_category.'&filename='.$next_file.'">&gt;</a></div>';}
@@ -60,7 +59,7 @@ if (
 // ====================
 
 function list_files($settings) {
-    $directory = BASE_PATH . $_GET['category'];
+    $directory = BASE_PATH . 'gallery/'. $_GET['category'];
     $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];
     $item_arr = array_diff(scandir($directory), array('..', '.'));
     foreach ($item_arr as $key => $value) {

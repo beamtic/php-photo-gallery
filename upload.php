@@ -1,7 +1,7 @@
 <?php
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
-require BASE_PATH . 'settings.php';
+require BASE_PATH . 'includes/settings.php';
 
 if(session_status() == PHP_SESSION_NONE){
     session_start();
@@ -28,10 +28,10 @@ if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
 
 $upload_category = $_POST['category'];
 
-$target_dir = $upload_category . "/";
+$target_dir = 'gallery/' . $upload_category . "/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 // Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -54,14 +54,13 @@ if ($_FILES["fileToUpload"]["size"] > 10000000) {
     $uploadOk = 0;
 }
 // Allow certain file formats
-if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    $message = "<p>You can only upload: JPG, JPEG, PNG og GIF filer.</p>";
+if(!in_array($imageFileType, $allowed_file_types_arr)) {
+    $message = "<p>You can only upload: JPG, JPEG, PNG og GIF filer.</p>" . $imageFileType;
     $uploadOk = 0;
 }
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
-    echo "The file was not uploaded";
+    $message .= "<p><b>The file was not uploaded.</b></p>";
 // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {

@@ -2,8 +2,8 @@
 
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
-require BASE_PATH . 'settings.php';
-require BASE_PATH . '_lib_/translator_class.php';
+require BASE_PATH . 'includes/settings.php';
+require BASE_PATH . 'lib/translator_class.php';
 $action_status_message = '';
 $translator = new translator($settings['lang']);
 
@@ -62,7 +62,7 @@ if (isset($_GET['delete'])) {
       $add_category = space_or_dash(' ', $add_category); // Convert space to dash
       $add_category = strtolower($add_category);
       
-      $add_category = BASE_PATH . $add_category;
+      $add_category = BASE_PATH . 'gallery/'. $add_category;
       if (!file_exists($add_category)) {
         mkdir($add_category, 0777);
         chmod($add_category, 0777); // We need to change permissions of the directory using chmod
@@ -104,9 +104,7 @@ foreach ($categories as &$value) {
   if ((isset($_SESSION["selected_category"])) && ($_SESSION["selected_category"] == $value)) {
    $selected=" selected";
   } else {$selected = '';}
-  if (!isset($ignored_categories_and_files["$value"])) {
-      $select_category .= '<option value="'.$value.'"'.$selected.'>'.space_or_dash('-', $value).'</option>';
-  }
+   $select_category .= '<option value="'.$value.'"'.$selected.'>'.space_or_dash('-', $value).'</option>';
 }
 $select_category .= '</select>';
 
@@ -145,9 +143,9 @@ function space_or_dash($replace_this='-', $in_this) {
     }
 }
 function list_dirs() {
-  $item_arr = array_diff(scandir(BASE_PATH), array('..', '.'));
+  $item_arr = array_diff(scandir(BASE_PATH . 'gallery/'), array('..', '.'));
   foreach ($item_arr as $key => $value) {
-      if (!is_dir(BASE_PATH . '/' . $value)) {
+      if (!is_dir(BASE_PATH . 'gallery/' . $value)) {
       unset($item_arr["$key"]);
     }
   }
