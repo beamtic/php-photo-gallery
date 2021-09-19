@@ -144,7 +144,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
   $path_to_thumb_file = $thumbs_directory . '/thumb-' . $filename;
   $source_filetype = exif_imagetype($path_to_source_file);
   if (file_exists($thumbs_directory) !== true) {
-    if (!mkdir($thumbs_directory)) {
+    if (!mkdir($thumbs_directory, 0775, true)) {
       echo $translator->string('Error: The thumbnails directory could not be created.');
       exit();
     } else {

@@ -6,7 +6,7 @@ $password = '098f6bcd4621d373cade4e832627b4f6'; // MD5 hashed password
  // 2. Update the password above. Default password is "test".
 
 $settings = array();
-$settings['lang'] = 'en'; // Used to change site language, and on the <html> lang attribute
+$settings['lang'] = 'da'; // Used to change site language, and on the <html> lang attribute
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
 

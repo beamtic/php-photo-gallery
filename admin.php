@@ -48,7 +48,7 @@ if (isset($_GET['delete'])) {
       $action_status_message = '<p>' . $translator->string('File does not exist:') . ' <b>'. $delete_this .'</b></p>';
     }
   } else {
-      if(!simple_delete($delete_this)) {
+      if(!simple_delete(BASE_PATH . 'gallery/'. $delete_this)) {
         $action_status_message = '<p>' . $translator->string('Possible problem with file permissions, or directory does not exist.') .'</p><p><b>'. $delete_this .'</b></p>';
       } else {
         $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $delete_this .'</b></p>';
@@ -65,7 +65,7 @@ if (isset($_GET['delete'])) {
       
       $add_category = BASE_PATH . 'gallery/'. $add_category;
       if (!file_exists($add_category)) {
-        mkdir($add_category, 0775);
+        mkdir($add_category, 0775, true);
         chmod($add_category, 0775); // We need to change permissions of the directory using chmod
                                     // after creating the directory, on some hosts
         $action_status_message = '<p>' . $translator->string('Created category:') .' <b>'. $_POST['add_category'] .'</b></p>';
