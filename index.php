@@ -173,6 +173,15 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
                 $width, $height, $orig_width, $orig_height);
             imagegif($image_p, $path_to_thumb_file);
             break;
+
+        case IMAGETYPE_WEBP:
+            $image = imagecreatefromwebp($path_to_source_file);
+            imagecopyresampled($image_p, $image, 0, 0, 0, 0,
+                $width, $height, $orig_width, $orig_height);
+            imagewebp($image_p, $path_to_thumb_file);
+            break;
+
+            
         default:
             echo $translator->string('Unknown filetype. Supported filetypes are: JPG, PNG og GIF.');exit();
     }

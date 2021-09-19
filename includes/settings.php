@@ -17,8 +17,8 @@ $allowed_file_types_arr = array(
     'jpeg',
     'png',
     'gif',
-    'webp',
-    'avif',
+    'webp'
+    // 'avif',
 );
 
 $category_json_file = 'category_data.json';

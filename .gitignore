@@ -2,3 +2,4 @@ gallery/*
 .project
 .buildpath
 .git
+.htaccess
