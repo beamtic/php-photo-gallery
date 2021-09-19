@@ -11,8 +11,8 @@ $translator = new translator($settings['lang']);
 require BASE_PATH . 'includes/dependency_checker.php';
 
 if(session_status() == PHP_SESSION_NONE){
-    session_start();
     session_cache_limiter("private_no_expire");
+    session_start();
 }
 // <<<<<<<<<<<<<<<<<<<<
 // Validate the _GET category input for security and error handling
