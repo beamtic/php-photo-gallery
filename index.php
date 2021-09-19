@@ -241,4 +241,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
       exit();
   }
 }
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 require BASE_PATH . 'templates/' . $template . '/category_template.php';

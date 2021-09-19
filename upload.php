@@ -74,6 +74,10 @@ if ($uploadOk == 0) {
     chmod($target_file, 0775);
 }
 
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 require BASE_PATH . 'templates/'.$template.'/upload_template.php';
 
 

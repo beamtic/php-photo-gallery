@@ -183,5 +183,8 @@ function simple_delete($file_or_dir) {
   } else {return false;}
 }
 
-header("Cache-Control: no cache");
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
 require BASE_PATH . 'templates/'.$template.'/admin_template.php';
