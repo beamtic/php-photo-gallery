@@ -32,11 +32,12 @@ if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
 // ADMIN ACTIONS (Available when logged in)
 // >>>>>>>>>>>>>>>
 if (isset($_GET['delete'])) {
-  $delete_this = BASE_PATH . 'gallery/' . $_GET['delete'];
-  if (!is_dir($delete_this)) {
-    if (file_exists($delete_this)) {
+  // Note. "$delete_this" must be relative
+  $delete_this = $_GET['delete'];
+  if (!is_dir(BASE_PATH . 'gallery/' . $delete_this)) {
+    if (file_exists(BASE_PATH . 'gallery/' . $delete_this)) {
       // echo 'thumbnails/thumb-'.$_GET['delete'];exit();
-      if(!simple_delete($delete_this)) {
+      if(!simple_delete(BASE_PATH . 'gallery/' . $delete_this)) {
         $action_status_message = '<p>' . $translator->string('Possible problem with file permissions, or directory does not exist.') .'</p><p><b>'. $delete_this .'</b></p>';
       } else {
         $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
@@ -52,7 +53,7 @@ if (isset($_GET['delete'])) {
       } else {
         $action_status_message = '<p>' . $translator->string('Deleted category:') .' <b>'. $delete_this .'</b></p>';
       }
-    simple_delete('thumbnails/'.$delete_this);
+    simple_delete(BASE_PATH . 'thumbnails/'.$delete_this);
   }
   
 } elseif (isset($_POST['add_category'])) {

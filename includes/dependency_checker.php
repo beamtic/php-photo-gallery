@@ -42,5 +42,5 @@ if (!file_exists($thumbnails_dir)) {
         $html .= 'sudo chown www-data:www-data -R /var/www/my-site-name</pre>';
         respond(500, $html);
     }
-    chmod($gallery_dir, 0775);
+    chmod($thumbnails_dir, 0775);
 }

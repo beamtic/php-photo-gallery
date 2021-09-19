@@ -143,7 +143,6 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
                 $orig_height
             );
             imagejpeg($image_p, $path_to_thumb_file);
-            chmod($path_to_thumb_file, 0775);
             break;
         case IMAGETYPE_PNG:
             $image = imagecreatefrompng($path_to_source_file);
@@ -160,7 +159,6 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
                 $orig_height
             );
             imagepng($image_p, $path_to_thumb_file);
-            chmod($path_to_thumb_file, 0775);
             break;
         case IMAGETYPE_GIF:
             $image = imagecreatefromgif($path_to_source_file);
@@ -177,7 +175,6 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
                 $orig_height
             );
             imagegif($image_p, $path_to_thumb_file);
-            chmod($path_to_thumb_file, 0775);
             break;
         case IMAGETYPE_WEBP:
             $image = imagecreatefromwebp($path_to_source_file);
@@ -194,12 +191,12 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
                 $orig_height
             );
             imagewebp($image_p, $path_to_thumb_file);
-            chmod($path_to_thumb_file, 0775);
             break;
         default:
             echo 'Unknown filetype. Supported filetypes are: JPG, PNG og GIF.';
             exit();
     }
+    chmod($path_to_thumb_file, 0775);
 }
 
 require BASE_PATH . 'templates/' . $template . '/viewer_template.php';
