@@ -71,6 +71,7 @@ if ($uploadOk == 0) {
     } else {
         $message ="<p>Error uploading file.</p>";
     }
+    chmod($target_file, 0775);
 }
 
 require BASE_PATH . 'templates/'.$template.'/upload_template.php';

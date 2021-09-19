@@ -32,7 +32,7 @@ if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
 // ADMIN ACTIONS (Available when logged in)
 // >>>>>>>>>>>>>>>
 if (isset($_GET['delete'])) {
-  $delete_this = $_GET['delete'];
+  $delete_this = BASE_PATH . 'gallery/' . $_GET['delete'];
   if (!is_dir($delete_this)) {
     if (file_exists($delete_this)) {
       // echo 'thumbnails/thumb-'.$_GET['delete'];exit();
@@ -41,7 +41,7 @@ if (isset($_GET['delete'])) {
       } else {
         $action_status_message = '<p>' . $translator->string('Deleted file:') .' <b>'. $delete_this .'</b></p>';
         $delete_this_thumb = str_lreplace('/', '/thumb-', $delete_this);
-        simple_delete('thumbnails/'.$delete_this_thumb);// Delete thumbnail
+        simple_delete(BASE_PATH . 'thumbnails/'.$delete_this_thumb);// Delete thumbnail
       }
     } else {
       $action_status_message = '<p>' . $translator->string('File does not exist:') . ' <b>'. $delete_this .'</b></p>';
@@ -64,8 +64,8 @@ if (isset($_GET['delete'])) {
       
       $add_category = BASE_PATH . 'gallery/'. $add_category;
       if (!file_exists($add_category)) {
-        mkdir($add_category, 0777);
-        chmod($add_category, 0777); // We need to change permissions of the directory using chmod
+        mkdir($add_category, 0775);
+        chmod($add_category, 0775); // We need to change permissions of the directory using chmod
                                     // after creating the directory, on some hosts
         $action_status_message = '<p>' . $translator->string('Created category:') .' <b>'. $_POST['add_category'] .'</b></p>';
       } else {
@@ -177,6 +177,7 @@ function simple_delete($file_or_dir) {
       return true;
     } else {
       unlink($file_or_dir); // simple_delete() also works on single files
+      return true;
     }
   } else {return false;}
 }
