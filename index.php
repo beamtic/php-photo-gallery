@@ -21,7 +21,7 @@ $HTML_navigation = '<li><a href="/">' . $translator->string('Home') . '</a></li>
 
 if (isset($_GET['category'])) {
   $HTML_navigation .= '<li><a href="index.php">' . $translator->string('Categories') . '</a></li>';
-  if (preg_match("/^[a-zæøåÆØÅ-]+$/i", $_GET['category'])) {
+  if (preg_match("/^[a-zæøåÆØÅ0-9-]+$/i", $_GET['category'])) {
     $requested_category = $_GET['category'];
     // <<<<<<<<<<<<<<<<<<<<
     // Fetch the files in the category, and include them in an HTML ul list
