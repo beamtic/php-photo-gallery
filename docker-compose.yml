@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  phpphotogallery-dev-main: # E.g. Apache + PHP in one
+    container_name: phpphotogallery-dev-main
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: phpphotogallery-on-ubuntu # Name of the image to build
+    ports:
+      - "80:80" # Port mapping
+      - "8080:8080"
+    extra_hosts:
+      - "docker.vm:127.0.0.1"
+    volumes:
+    - ./:/var/www/phpphotogallery

@@ -4,3 +4,5 @@ thumbnails/*
 .buildpath
 .git
 .htaccess
+.vscode
+.DS_Store
