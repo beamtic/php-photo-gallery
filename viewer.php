@@ -193,7 +193,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
             imagewebp($image_p, $path_to_thumb_file);
             break;
         default:
-            echo 'Unknown filetype. Supported filetypes are: JPG, PNG og GIF.';
+            echo 'Unknown filetype. Supported filetypes are: JPG, PNG or GIF.';
             exit();
     }
     chmod($path_to_thumb_file, 0775);
