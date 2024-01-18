@@ -237,7 +237,7 @@ function createThumbnail($filename, $source_directory, $thumbs_directory, $max_w
 
 
     default:
-      echo $translator->string('Unknown filetype. Supported filetypes are: JPG, PNG og GIF.');
+      echo $translator->string('Unknown filetype. Supported filetypes are: JPG, PNG or GIF.');
       exit();
   }
 }
