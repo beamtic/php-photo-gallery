@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   phpphotogallery-dev-main: # E.g. Apache + PHP in one
     container_name: phpphotogallery-dev-main
