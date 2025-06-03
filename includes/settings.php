@@ -46,13 +46,14 @@ if (null !== $requested_file && !preg_match("/^[^\/\\\\:*?\"'<>|]+$/", $requeste
     exit();
 }
 
-if (file_exists($thumbnails_path) !== true) {
-    if (!mkdir($thumbnails_path, 0775, true)) {
-        echo $translator->string('Error: The thumbnails directory could not be created.');
-        exit();
-    } else {
-        // On some hosts, we need to change permissions of the directory using chmod
-        // after creating the directory
-        chmod($thumbnails_path, 0775);
+
+foreach ([$gallery_path, $thumbnails_path] as $path) {
+    if (!file_exists($path)) {
+        if (!mkdir($path, 0777, true)) {
+            echo $translator->string('Error: The directory could not be created: ') . htmlspecialchars($path);
+            exit();
+        } else {
+            chmod($path, 0777);
+        }
     }
 }

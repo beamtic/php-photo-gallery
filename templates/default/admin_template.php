@@ -35,7 +35,9 @@
     </nav>
     <div class="clear"></div>
   </header>
+  <div id="messageArea">
   <?php echo $action_status_message; ?>
+  </div>
   <article>
     <div id="main">
     <?php echo $HTML_article_content; ?>
@@ -96,12 +98,12 @@
       document.getElementById('fileToUpload').value = '';
 
       function showStatusMessage(msg) {
-        let container = document.getElementById('action_status_message');
-        if (!container) {
-          const body = document.querySelector('body');
+        let statusMessage = document.getElementById('action_status_message');
+        if (!statusMessage) {
+          const messageArea = document.getElementById('messageArea');
           container = document.createElement('div');
           container.id = 'action_status_message';
-          body.insertBefore(container, article.firstChild);
+          messageArea.appendChild(container);
         }
         container.innerHTML = msg;
       }

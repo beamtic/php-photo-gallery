@@ -2,8 +2,8 @@
 // Remove trailing slashes (if present), and add one manually.
 // Note: This avoids a problem where some servers might add a trailing slash, and others not..
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
-require BASE_PATH . 'includes/global_functions.php';
 require BASE_PATH . 'includes/settings.php'; // Note. Include a file in same directory without slash in front of it!
+require BASE_PATH . 'includes/global_functions.php';
 
 require BASE_PATH . 'includes/dependency_checker.php';
 
@@ -42,14 +42,13 @@ $files = array_values(list_files($gallery_path));
 if (count($files) >= 1) {
   $HTML_cup .= '<ul id="images">';
   foreach ($files as &$file_name) {
+    $category_preview_control = '';
+    $delete_control = '';
     if (isset($_SESSION["password"])) {
       $delete_control = '<a href="admin.php?delete=' . $requested_category . '/' . $file_name . '" class="delete"><img src="delete.png" alt="delete" style="width:30px;height:30px;"></a>';
       if (null !== $requested_category) {
         $category_preview_control = '<a href="admin.php?category=' . $requested_category . '&set_preview_image=' . $file_name . '" class="preview"><img src="preview.png" alt="set preview image" style="width:30px;height:30px;"></a>';
       }
-    } else {
-      $delete_control = '';
-      $category_preview_control = '';
     }
     $public_path = $requested_category ? 'thumbnails/' . $requested_category . '/' : 'thumbnails/';
     $thumb_filename = 'thumb-' . rawurlencode($file_name);

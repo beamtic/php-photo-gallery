@@ -8,8 +8,8 @@ $action_status_message = '';
 $translator = new translator($settings['lang']);
 
 if(session_status() == PHP_SESSION_NONE){
-    session_start();
     session_cache_limiter("private_no_expire");
+    session_start();
 }
 if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {

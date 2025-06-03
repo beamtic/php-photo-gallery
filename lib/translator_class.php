@@ -12,7 +12,7 @@ class translator {
     private $install_dir;
     private $translation_file_path;
     
-    public function __construct($lang) {
+    public function __construct(string $lang) {
         $this->install_dir = rtrim(realpath(dirname(__FILE__) . '/../'), "/") . '/';
         $this->gui_lang = $lang;
         $this->translation_file_path = $this->install_dir.'translations/'.$this->gui_lang.'.json';
