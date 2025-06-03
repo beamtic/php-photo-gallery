@@ -3,7 +3,6 @@
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 
 require BASE_PATH . 'includes/settings.php';
-require BASE_PATH . 'lib/translator_class.php';
 $action_status_message = '';
 $translator = new translator($settings['lang']);
 
