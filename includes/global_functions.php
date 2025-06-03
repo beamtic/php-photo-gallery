@@ -1,9 +1,5 @@
 <?php
 
-require_once BASE_PATH . 'lib/translator_class.php';
-
-$translator = new translator($settings['lang']);
-
 
 function respond($code, $html = '', $headers = [])
 {

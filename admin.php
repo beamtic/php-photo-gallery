@@ -23,7 +23,7 @@ if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
     <body><h1>'.$translator->string('Login').'</h1><p>'.$translator->string('You must be logged in to access this page!').'</p>
    <form action="" method="POST">
     <input type="password" placeholder="Password" name="password">
-    <input type="submit" class="button">
+    <button type="submit" class="button">'.$translator->string('Login').'</button>
    </form>
 </body></html>';exit();
   }

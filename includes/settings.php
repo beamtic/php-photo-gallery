@@ -1,5 +1,5 @@
 <?php
-
+require_once BASE_PATH . 'lib/translator_class.php';
 
 $password = '098f6bcd4621d373cade4e832627b4f6'; // MD5 hashed password
 // 1. Create new md5 from password: /stringtomd5.php?string=xxx
@@ -24,6 +24,7 @@ $allowed_file_types_arr = array(
 $category_json_file = 'category_data.json';
 
 // Dynamic settings. Might break the gallery if modified!
+$translator = new translator($settings['lang']);
 $gallery_path = BASE_PATH . "gallery/";
 $thumbnails_path = BASE_PATH . "thumbnails/";
 
