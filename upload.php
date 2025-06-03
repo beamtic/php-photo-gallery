@@ -1,86 +1,66 @@
 <?php
+// === CONFIG ===
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
-
 require BASE_PATH . 'includes/settings.php';
 
-if(session_status() == PHP_SESSION_NONE){
-    session_start();
+if (session_status() == PHP_SESSION_NONE) {
     session_cache_limiter("private_no_expire");
+    session_start();
 }
+
+header("Content-Type: application/json");
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ((isset($_POST["password"])) && (md5($_POST["password"]) == $password)) {
             $_SESSION["password"] = md5($_POST["password"]);
         } else {
-            echo 'Wrong password?';exit();
+            http_response_code(401);
+            echo json_encode(["success" => false, "error" => "Invalid password."]);
+            exit();
         }
     } else {
-        echo '<!doctype html><html><head><title>Login</title></head>
-    <body><h1>Login</h1><p>You must be logged in to view this page.</p>
-   <form action="" method="POST">
-    <input type="password" placeholder="Password" name="password">
-    <input type="submit" class="button">
-   </form>
-</body></html>';exit();
+        http_response_code(403);
+        echo json_encode(["success" => false, "error" => "Authentication required."]);
+        exit();
     }
 }
 
-$upload_category = $_POST['category'];
+if (isset($_FILES['chunk'])) {
+    $upload_category = $_POST['category'] ?? '';
+    $chunkIndex = $_POST['chunkIndex'];
+    $totalChunks = $_POST['totalChunks'];
+    $originalName = basename($_POST['filename']);
 
-$target_dir = 'gallery/' . $upload_category . "/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if($check !== false) {
-        // echo "File is an image - " . $check["mime"] . ".";
-        $uploadOk = 1;
-    } else {
-        $message = "<p>This file is not a picture...</p>";
-        $uploadOk = 0;
-    }
-}
-// Check if file already exists
-if (file_exists($target_file)) {
-    $message = "<p>A file with that name already exists...</p>";
-    $uploadOk = 0;
-}
-// Check file size
-if ($_FILES["fileToUpload"]["size"] > 10000000) {
-    $message = "<p>The file was to big. Try to resize it before uploading.</p>";
-    $uploadOk = 0;
-}
-// Allow certain file formats
-if(!in_array($imageFileType, $allowed_file_types_arr)) {
-    $message = "<p>You can only upload: JPG, JPEG, PNG og GIF filer.</p>" . $imageFileType;
-    $uploadOk = 0;
-}
-// Check if $uploadOk is set to 0 by an error
-if ($uploadOk == 0) {
-    $message .= "<p><b>The file was not uploaded.</b></p>";
-// if everything is ok, try to upload file
-} else {
-    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        $message = "<p>". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.</p>";
-        $message .= '<p><a href="admin.php" class="button">Upload another file</a></p>';
-        $message .= '<p><a href="index.php?category='.$upload_category.'">Go to: '.$upload_category.'</a></p>';
+    $target_dir = BASE_PATH . 'gallery/' . ($upload_category ? $upload_category . '/' : '');
+    if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
+
+    $tempDir = sys_get_temp_dir() . '/chunk_upload_' . md5($originalName);
+    $finalPath = $target_dir . $originalName;
+
+    if (!file_exists($tempDir)) mkdir($tempDir, 0777, true);
+    move_uploaded_file($_FILES['chunk']['tmp_name'], "$tempDir/chunk_$chunkIndex");
+
+    if ((int)$chunkIndex + 1 === (int)$totalChunks) {
+        $out = fopen($finalPath, 'wb');
+        for ($i = 0; $i < $totalChunks; $i++) {
+            fwrite($out, file_get_contents("$tempDir/chunk_$i"));
+            unlink("$tempDir/chunk_$i");
+        }
+        fclose($out);
+        rmdir($tempDir);
+        chmod($finalPath, 0775);
         $_SESSION["selected_category"] = $upload_category;
-    } else {
-        $message ="<p>Error uploading file.</p>";
+        echo json_encode(["success" => true, "message" => "Upload complete."]);
+        exit;
     }
-    chmod($target_file, 0775);
+
+    echo json_encode(["success" => true, "message" => "Chunk $chunkIndex received."]);
+    exit;
 }
 
-header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Pragma: no-cache");
-header("Expires: 0");
-
-require BASE_PATH . 'templates/'.$template.'/upload_template.php';
-
-
-
-
-
+http_response_code(400);
+echo json_encode(["success" => false, "error" => "No file uploaded."]);

@@ -75,19 +75,16 @@ if (isset($_GET['delete'])) {
   } else {
     $action_status_message = '<p>' . $translator->string('Invalid category name:') .' <b>'. $_POST['add_category'] .'</b></p>';
   }
-} elseif ((isset($_GET['category'])) && (isset($_GET['set_preview_image']))) {
-    // SET CATEGORY PREVIEW
-    $thumbs_directory = BASE_PATH . 'thumbnails/' . $_GET['category'];
-    
-    if (file_exists($thumbs_directory . '/' . $category_json_file)) {
-        $category_data = json_decode(file_get_contents($thumbs_directory . '/'. $category_json_file), true);
+} elseif (null !== $thumbnails_path && isset($_GET['set_preview_image'])) {
+    if (file_exists($thumbnails_path . $category_json_file)) {
+        $category_data = json_decode(file_get_contents($thumbnails_path . $category_json_file), true);
         $category_data['preview_image'] = 'thumb-'.$_GET['set_preview_image'];
     } else {
         $category_data = array('preview_image' => 'thumb-'.$_GET['set_preview_image']);
     }
     
     $category_data = json_encode($category_data);
-    file_put_contents($thumbs_directory . '/' . $category_json_file, $category_data);
+    file_put_contents($thumbnails_path . $category_json_file, $category_data);
     
     $action_status_message = '<p>'.$translator->string('The category preview image was changed in: ') .'<b>'.$_GET['category'].'</b></p>';
 }
@@ -101,6 +98,8 @@ if (!empty($action_status_message)) {
 // >>>>>>>>>>>>>>>
 $categories = list_dirs();
 $select_category = '<select name="category">';
+$selected = (($_SESSION["selected_category"] ?? null) === "") ? ' selected' : '';
+$select_category .= '<option value=""'.$selected.'>'.$translator->string("Gallery Root").' (/)</option>';
 foreach ($categories as &$value) {
   if ((isset($_SESSION["selected_category"])) && ($_SESSION["selected_category"] == $value)) {
    $selected=" selected";
@@ -109,7 +108,7 @@ foreach ($categories as &$value) {
 }
 $select_category .= '</select>';
 
-$HTML_article_content = $action_status_message;
+$HTML_article_content = '';
 $HTML_article_content .= '
 <div class="flexbox">
   <section class="column">
@@ -132,7 +131,6 @@ $HTML_article_content .= '
 </div>';
 
 $HTML_navigation = '<li><a href="/">'.$translator->string('Home').'</a></li>';
-$HTML_navigation .= '<li><a href="index.php">'.$translator->string('Categories').'</a></li>';
 $HTML_navigation = '<ol class="flexbox">'.$HTML_navigation.'</ol>';
 
 // :::Functions:::

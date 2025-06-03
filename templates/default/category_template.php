@@ -14,7 +14,9 @@
   </header>
   <article>
     <header><h1><?php echo $requested_category; ?></h1></header>
-    <?php echo $HTML_cup; ?>
+    <div id="main">
+      <?php echo $HTML_cup; ?>
+    </div>
   </article>
   <footer>
    <nav>

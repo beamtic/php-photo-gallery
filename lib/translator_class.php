@@ -9,6 +9,8 @@
 
 class translator {
     public $gui_lang; // Two-letter language code for the translation of GUI strings.
+    private $install_dir;
+    private $translation_file_path;
     
     public function __construct($lang) {
         $this->install_dir = rtrim(realpath(dirname(__FILE__) . '/../'), "/") . '/';
