@@ -7,14 +7,10 @@ require BASE_PATH . 'includes/global_functions.php';
 
 require BASE_PATH . 'includes/dependency_checker.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-  session_cache_limiter("private_no_expire");
-  session_start();
-}
 
 $HTML_navigation = '';
 if ("/" !== $_SERVER['REQUEST_URI']) {
-  $HTML_navigation = '<li><a href="/">' . $translator->string('Home') . '</a></li>';
+igation = '<li><a href="/">' . $translator->string('Home') . '</a></li>';
 }
 
 // Show categories if any
