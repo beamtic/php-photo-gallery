@@ -4,13 +4,7 @@
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 require BASE_PATH . 'includes/settings.php'; // Note. Include a file in same directory without slash in front of it!
 require BASE_PATH . 'includes/global_functions.php';
-
 require BASE_PATH . 'includes/dependency_checker.php';
-
-if (session_status() == PHP_SESSION_NONE) {
-  session_cache_limiter("private_no_expire"); // Must be placed before
-  session_start(); // Starts the session
-}
 
 $HTML_navigation = '';
 if ("/" !== $_SERVER['REQUEST_URI']) {

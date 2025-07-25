@@ -1,23 +1,30 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+  session_cache_limiter("private_no_expire"); // Must be placed before
+  session_start(); // Starts the session
+}
+
 require_once BASE_PATH . 'lib/translator_class.php';
 
 $settings = array();
 $settings['lang'] = 'da'; // Used to change site language, and on the <html> lang attribute
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
+$settingsFile = BASE_PATH . '.settings.json';
 
-if (!file_exists(BASE_PATH . '.settings.json')) {
+if (!file_exists($settingsFile)) {
     require BASE_PATH . 'includes/setup.php';
     exit();
 } else {
-    $customSettingsContent = file_get_contents(BASE_PATH . '.settings.json');
+    $customSettingsContent = file_get_contents($settingsFile);
     $settings = json_decode($customSettingsContent, true);
     $template = $settings['template'];
     $password = $settings['password'];
 }
 
 // If setup is requested
-if (isset($_GET['settings']) && $_GET['settings'] == true) {
+if (isset($_GET['settings']) && $_GET['settings'] == true && file_exists($settingsFile)) {
+    // When the settings file exists, require authentication to make changes
     require BASE_PATH . 'includes/setup.php';
     exit();
 }
@@ -50,12 +57,12 @@ if (null === $requested_category) {
     $thumbnails_path = $thumbnails_path . $requested_category . '/';
 } else {
     header("HTTP/1.0 500 Internal Server Error");
-    echo '<!doctype html><html><head></head><body><h1>Error</h1><p>Invalid category</p></body></html>';
+    echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('Invalid category').'</p></body></html>';
     exit();
 }
 if (null !== $requested_file && !preg_match("/^[^\/\\\\:*?\"'<>|]+$/", $requested_file)) {
     header("HTTP/1.0 500 Internal Server Error");
-    echo '<!doctype html><html><head></head><body><h1>Error</h1><p>Invalid filename</p></body></html>';
+    echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('Invalid filename').'</p></body></html>';
     exit();
 }
 
