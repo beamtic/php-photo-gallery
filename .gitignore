@@ -6,3 +6,4 @@ thumbnails/*
 .htaccess
 .vscode
 .DS_Store
+.settings.json
