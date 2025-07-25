@@ -20,9 +20,6 @@
     <h1><?php echo $settings['title']; ?></h1>
     <div class="clear"></div>
   </header>
-  <div id="messageArea">
-    <?php echo $action_status_message; ?>
-  </div>
   <article>
     <div id="main">
       <form method="post">
