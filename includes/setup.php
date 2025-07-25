@@ -19,6 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $settings = $updatedSettings;
   } else {
     // If the file exists, password will remain the same when not provided
+
+    // When the .settings.json file exists, require authentication to make changes
+    if ((!isset($_SESSION["password"])) || ($_SESSION["password"] !== $password)) {
+      http_response_code(403);
+      echo json_encode(["success" => false, "error" => "Authentication required."]);
+      exit();
+    }
+
     $customSettingsContent = file_get_contents(BASE_PATH . '.settings.json');
     $customSettings = json_decode($customSettingsContent, true);
     $settings = $updatedSettings + $customSettings;
