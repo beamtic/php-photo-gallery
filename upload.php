@@ -3,11 +3,6 @@
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 require BASE_PATH . 'includes/settings.php';
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_cache_limiter("private_no_expire");
-    session_start();
-}
-
 header("Content-Type: application/json");
 header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
