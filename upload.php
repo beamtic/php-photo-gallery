@@ -13,20 +13,10 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if ((isset($_POST["password"])) && (md5($_POST["password"]) == $password)) {
-            $_SESSION["password"] = md5($_POST["password"]);
-        } else {
-            http_response_code(401);
-            echo json_encode(["success" => false, "error" => "Invalid password."]);
-            exit();
-        }
-    } else {
-        http_response_code(403);
-        echo json_encode(["success" => false, "error" => "Authentication required."]);
-        exit();
-    }
+if ((!isset($_SESSION["password"])) || ($_SESSION["password"] !== $password)) {
+    http_response_code(403);
+    echo json_encode(["success" => false, "error" => "Authentication required."]);
+    exit();
 }
 
 if (!isset($_POST['filename'])) {
