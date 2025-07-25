@@ -1,14 +1,26 @@
 <?php
 require_once BASE_PATH . 'lib/translator_class.php';
 
-$password = '098f6bcd4621d373cade4e832627b4f6'; // MD5 hashed password
-// 1. Create new md5 from password: /stringtomd5.php?string=xxx
-// 2. Update the password above. Default password is "test".
-
 $settings = array();
 $settings['lang'] = 'da'; // Used to change site language, and on the <html> lang attribute
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
+
+if (!file_exists(BASE_PATH . '.settings.json')) {
+    require BASE_PATH . 'includes/setup.php';
+    exit();
+} else {
+    $customSettingsContent = file_get_contents(BASE_PATH . '.settings.json');
+    $settings = json_decode($customSettingsContent, true);
+    $template = $settings['template'];
+    $password = $settings['password'];
+}
+
+// If setup is requested
+if (isset($_GET['settings']) && $_GET['settings'] == true) {
+    require BASE_PATH . 'includes/setup.php';
+    exit();
+}
 
 // Files allowed for upload (Check performed in upload.php)
 // Note. that this assumes that the files are trusted and not messed with
