@@ -2,7 +2,7 @@
 <html lang="<?php echo $settings['lang']; ?>">
 
 <head>
-  <title>Administration | Settings</title>
+  <title><?php echo $translator->string('Administration'); ?> | <?php echo $translator->string('Settings'); ?></title>
   <link rel="stylesheet" href="templates/default/gallery.css">
   <style>
     .setting {
@@ -24,11 +24,11 @@
     <div id="main">
       <form method="post">
         <div class="setting">
-          <label for="title">Gallery title:</label>
+          <label for="title"><?php echo $translator->string('Gallery title:'); ?></label>
           <input type="text" name="title" id="title" value="<?php echo $settings['title']; ?>">
         </div>
         <div class="setting">
-          <label for="language">Language:</label>
+          <label for="language"><?php echo $translator->string('Language:'); ?></label>
           <select name="lang" id="language">
             <?php
             $selectedOption = '';
@@ -43,7 +43,7 @@
           </select>
         </div>
         <div class="setting">
-          <label for="template">Template:</label>
+          <label for="template"><?php echo $translator->string('Template:'); ?></label>
           <select name="template" id="template">
             <?php
             foreach ($templateList as $templateName) {
@@ -57,17 +57,17 @@
           </select>
         </div>
         <div class="setting">
-          <label for="password">Password:</label>
+          <label for="password"><?php echo $translator->string('Password:'); ?></label>
           <input type="password" name="password" id="password">
         </div>
-        <input type="submit" class="button" value="Save">
+        <input type="submit" class="button" value="<?php echo $translator->string('Save'); ?>">
       </form>
     </div>
   </article>
   <footer>
     <nav>
       <ol>
-        <li><a href="admin.php">Administration</a></li>
+        <li><a href="admin.php"><?php echo $translator->string('Administration'); ?></a></li>
       </ol>
     </nav>
   </footer>

@@ -22,6 +22,8 @@ if (!file_exists($settingsFile)) {
     $password = $settings['password'];
 }
 
+$translator = new translator($settings['lang']);
+
 // If setup is requested
 if (isset($_GET['settings']) && $_GET['settings'] == true && file_exists($settingsFile)) {
     // When the settings file exists, require authentication to make changes
@@ -42,8 +44,6 @@ $allowed_file_types_arr = array(
 
 $category_json_file = 'category_data.json';
 
-// Dynamic settings. Might break the gallery if modified!
-$translator = new translator($settings['lang']);
 $gallery_path = BASE_PATH . "gallery/";
 $thumbnails_path = BASE_PATH . "thumbnails/";
 
