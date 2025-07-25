@@ -47,6 +47,7 @@
     <nav>
       <ol>
         <li><a href="admin.php">Administration</a></li>
+        <li><a href="?settings=true">Settings</a></li>
       </ol>
     </nav>
   </footer>
@@ -85,7 +86,11 @@
             body: formData
           });
           const data = await res.json();
-          showStatusMessage(data.message);
+          if (data.success) {
+            showStatusMessage(data.message);
+          } else {
+            showStatusMessage(data.error);
+          }
         } catch (err) {
           showStatusMessage('Error');
           console.error("Error uploading chunk", i, err);

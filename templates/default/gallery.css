@@ -15,6 +15,7 @@
   #categories .category a {display:block;position:relative;width:100%;height:100%;color:#fff;}
   #categories .category a span {width:100%;background:rgba(0,0,0,0.5);display:block;line-height:1.2em;vertical-align:middle;position:relative;top:45%;}
   nav {padding:1em 2em;}
+  footer nav ol {display:flex;gap:0.5rem}
 
   ol,ul {list-style-type:none;}
   #site_header {width:100%;background:rgb(245,245,245);z-index:1;}
