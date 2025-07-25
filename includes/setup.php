@@ -1,4 +1,15 @@
 <?php
+// Authentication check: only allow changing settings on setup or when logged in
+if (file_exists($settingsFile) && ($_SESSION["password"] !== $password)) {
+  http_response_code(403);
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    echo json_encode(["success" => false, "error" => "Authentication required."]);
+  } else {
+    echo "Authentication required.";
+  }
+  exit();
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -9,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   ];
 
   // If file does not exist, require a password
-  if (!file_exists(BASE_PATH . '.settings.json')) {
+  if (!file_exists($settingsFile)) {
     if (empty($_POST['password']) || strlen($_POST['password']) < 4) {
       echo 'Please provide a password of at least 4 characters in length.';
       exit();
@@ -19,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $settings = $updatedSettings;
   } else {
     // If the file exists, password will remain the same when not provided
-    $customSettingsContent = file_get_contents(BASE_PATH . '.settings.json');
+    $customSettingsContent = file_get_contents($settingsFile);
     $customSettings = json_decode($customSettingsContent, true);
     $settings = $updatedSettings + $customSettings;
   }
 
-  file_put_contents(BASE_PATH . '.settings.json', json_encode($settings));
+  file_put_contents($settingsFile, json_encode($settings));
 }
 
 $selectedLanguage = $settings['lang'];
