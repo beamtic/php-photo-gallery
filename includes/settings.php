@@ -11,6 +11,7 @@ $settings['lang'] = 'da'; // Used to change site language, and on the <html> lan
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
 $settingsFile = BASE_PATH . '.settings.json';
+$translator = new translator($settings['lang']);
 
 if (!file_exists($settingsFile)) {
     require BASE_PATH . 'includes/setup.php';
@@ -21,8 +22,6 @@ if (!file_exists($settingsFile)) {
     $template = $settings['template'];
     $password = $settings['password'];
 }
-
-$translator = new translator($settings['lang']);
 
 // If setup is requested
 if (isset($_GET['settings']) && $_GET['settings'] == true && file_exists($settingsFile)) {
