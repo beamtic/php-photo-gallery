@@ -4,13 +4,7 @@
 define('BASE_PATH', rtrim(realpath(dirname(__FILE__)), "/") . '/');
 require BASE_PATH . 'includes/settings.php'; // Note. Include a file in same directory without slash in front of it!
 require BASE_PATH . 'includes/global_functions.php';
-
 require BASE_PATH . 'includes/dependency_checker.php';
-
-if (session_status() == PHP_SESSION_NONE) {
-  session_cache_limiter("private_no_expire");
-  session_start();
-}
 
 $HTML_navigation = '';
 if ("/" !== $_SERVER['REQUEST_URI']) {
@@ -50,7 +44,6 @@ if (count($files) >= 1) {
         $category_preview_control = '<a href="admin.php?category=' . $requested_category . '&set_preview_image=' . $file_name . '" class="preview"><img src="preview.png" alt="set preview image" style="width:30px;height:30px;"></a>';
       }
     }
-    $public_path = $requested_category ? 'thumbnails/' . $requested_category . '/' : 'thumbnails/';
     $thumb_filename = 'thumb-' . rawurlencode($file_name);
     $thumb_file_location = $thumbnails_path . 'thumb-' . rawurlencode($file_name);
     $source_file_location = $gallery_path . $file_name;

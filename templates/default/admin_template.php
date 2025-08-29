@@ -2,7 +2,7 @@
 <html lang="<?php echo $settings['lang']; ?>">
 
 <head>
-  <title>Administration | <?php echo $settings['title']; ?></title>
+  <title><?php echo $translator->string('Administration'); ?> | <?php echo $settings['title']; ?></title>
   <link rel="stylesheet" href="templates/default/gallery.css">
   <style type="text/css">
     #Loader {
@@ -46,13 +46,14 @@
   <footer>
     <nav>
       <ol>
-        <li><a href="admin.php">Administration</a></li>
+        <li><a href="admin.php"><?php echo $translator->string('Administration'); ?></a></li>
+        <li><a href="?settings=true"><?php echo $translator->string('Settings'); ?> </a></li>
       </ol>
     </nav>
   </footer>
   <div id="Loader">
     <div class="text">
-      <p>Uploader...</p>
+      <p><?php echo $translator->string('Uploading...'); ?></p>
       <div>&#x279f;&#x279f;</div>
     </div>
   </div>
@@ -85,7 +86,11 @@
             body: formData
           });
           const data = await res.json();
-          showStatusMessage(data.message);
+          if (data.success) {
+            showStatusMessage(data.message);
+          } else {
+            showStatusMessage(data.error);
+          }
         } catch (err) {
           showStatusMessage('Error');
           console.error("Error uploading chunk", i, err);

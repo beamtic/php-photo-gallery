@@ -6,14 +6,10 @@ require BASE_PATH . 'includes/settings.php';
 $action_status_message = '';
 $translator = new translator($settings['lang']);
 
-if(session_status() == PHP_SESSION_NONE){
-    session_cache_limiter("private_no_expire");
-    session_start();
-}
-if ((!isset($_SESSION["password"])) || ($_SESSION["password"] != $password)) {
+if ((!isset($_SESSION["password"])) || ($_SESSION["password"] !== $password)) {
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ((isset($_POST["password"])) && (md5($_POST["password"]) == $password)) {
-      $_SESSION["password"] = md5($_POST["password"]);
+    if ((isset($_POST["password"])) && (password_verify($_POST["password"], $password))) {
+      $_SESSION["password"] = $password;
     } else {
     echo 'Wrong password?';exit();
     }

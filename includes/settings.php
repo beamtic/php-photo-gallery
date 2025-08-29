@@ -1,14 +1,35 @@
 <?php
-require_once BASE_PATH . 'lib/translator_class.php';
+if (session_status() == PHP_SESSION_NONE) {
+  session_cache_limiter("private_no_expire"); // Must be placed before
+  session_start(); // Starts the session
+}
 
-$password = '098f6bcd4621d373cade4e832627b4f6'; // MD5 hashed password
-// 1. Create new md5 from password: /stringtomd5.php?string=xxx
-// 2. Update the password above. Default password is "test".
+require_once BASE_PATH . 'lib/translator_class.php';
 
 $settings = array();
 $settings['lang'] = 'da'; // Used to change site language, and on the <html> lang attribute
 $settings['title'] = 'PHP Photo Gallery'; // Default: "PHP Photo Gallery"
 $template = 'default'; // Default: "default"
+$settingsFile = BASE_PATH . '.settings.json';
+
+if (!file_exists($settingsFile)) {
+    require BASE_PATH . 'includes/setup.php';
+    exit();
+} else {
+    $customSettingsContent = file_get_contents($settingsFile);
+    $settings = json_decode($customSettingsContent, true);
+    $template = $settings['template'];
+    $password = $settings['password'];
+}
+
+$translator = new translator($settings['lang']);
+
+// If setup is requested
+if (isset($_GET['settings']) && $_GET['settings'] == true && file_exists($settingsFile)) {
+    // When the settings file exists, require authentication to make changes
+    require BASE_PATH . 'includes/setup.php';
+    exit();
+}
 
 // Files allowed for upload (Check performed in upload.php)
 // Note. that this assumes that the files are trusted and not messed with
@@ -23,27 +44,28 @@ $allowed_file_types_arr = array(
 
 $category_json_file = 'category_data.json';
 
-// Dynamic settings. Might break the gallery if modified!
-$translator = new translator($settings['lang']);
 $gallery_path = BASE_PATH . "gallery/";
 $thumbnails_path = BASE_PATH . "thumbnails/";
 
 $requested_category = isset($_GET['category']) ? trim($_GET['category']) : null;
 $requested_file = isset($_GET['filename']) ? trim($_GET['filename']) : null;
+
 if (null === $requested_category) {
     $html_title = $requested_file . ' | Viewer';
+    $public_path = 'thumbnails/';
 } else if (preg_match("/^[a-zA-ZæøåÆØÅ0-9_.-]+$/", $requested_category)) {
     $html_title = $requested_file . ' - ' . $requested_category . ' | ' . $html_title;
     $gallery_path = $gallery_path . $requested_category . '/';
     $thumbnails_path = $thumbnails_path . $requested_category . '/';
+    $public_path = 'thumbnails/' . $requested_category . '/';
 } else {
     header("HTTP/1.0 500 Internal Server Error");
-    echo '<!doctype html><html><head></head><body><h1>Error</h1><p>Invalid category</p></body></html>';
+    echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('Invalid category').'</p></body></html>';
     exit();
 }
 if (null !== $requested_file && !preg_match("/^[^\/\\\\:*?\"'<>|]+$/", $requested_file)) {
     header("HTTP/1.0 500 Internal Server Error");
-    echo '<!doctype html><html><head></head><body><h1>Error</h1><p>Invalid filename</p></body></html>';
+    echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('Invalid filename').'</p></body></html>';
     exit();
 }
 

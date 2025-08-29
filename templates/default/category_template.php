@@ -21,7 +21,7 @@
   <footer>
    <nav>
     <ol>
-     <li><a href="admin.php">Administration</a></li>
+     <li><a href="admin.php"><?php echo $translator->string('Administration'); ?></a></li>
     </ol>
    </nav>
   </footer>
