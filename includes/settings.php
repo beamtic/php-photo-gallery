@@ -49,12 +49,15 @@ $thumbnails_path = BASE_PATH . "thumbnails/";
 
 $requested_category = isset($_GET['category']) ? trim($_GET['category']) : null;
 $requested_file = isset($_GET['filename']) ? trim($_GET['filename']) : null;
+
 if (null === $requested_category) {
     $html_title = $requested_file . ' | Viewer';
+    $public_path = 'thumbnails/';
 } else if (preg_match("/^[a-zA-ZæøåÆØÅ0-9_.-]+$/", $requested_category)) {
     $html_title = $requested_file . ' - ' . $requested_category . ' | ' . $html_title;
     $gallery_path = $gallery_path . $requested_category . '/';
     $thumbnails_path = $thumbnails_path . $requested_category . '/';
+    $public_path = 'thumbnails/' . $requested_category . '/';
 } else {
     header("HTTP/1.0 500 Internal Server Error");
     echo '<!doctype html><html><head></head><body><h1>'.$translator->string('Error').'</h1><p>'.$translator->string('Invalid category').'</p></body></html>';

@@ -44,7 +44,6 @@ if (count($files) >= 1) {
         $category_preview_control = '<a href="admin.php?category=' . $requested_category . '&set_preview_image=' . $file_name . '" class="preview"><img src="preview.png" alt="set preview image" style="width:30px;height:30px;"></a>';
       }
     }
-    $public_path = $requested_category ? 'thumbnails/' . $requested_category . '/' : 'thumbnails/';
     $thumb_filename = 'thumb-' . rawurlencode($file_name);
     $thumb_file_location = $thumbnails_path . 'thumb-' . rawurlencode($file_name);
     $source_file_location = $gallery_path . $file_name;

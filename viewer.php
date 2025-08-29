@@ -9,7 +9,6 @@ $html_backlink = '';
 $next_file = false;
 $previous_file = false;
 
-
 $files = array_values(list_files($gallery_path, $thumbnails_path, $requested_category));
 $files_count = count($files);
 
@@ -28,9 +27,10 @@ if ($files_count >= 1) {
       }
     } else {
       $file_name = $files["$i"];
-      $thumb_file_location = $thumbnails_path . 'thumb-' . $file_name;
+      $file_link = (null !== $requested_category) ? 'viewer.php?category=' . $requested_category . '&filename=' . $file_name : 'viewer.php?filename=' . $file_name;
+      $thumb_file_location = $public_path . 'thumb-' . $file_name;
       $source_file_location = $gallery_path . $file_name;
-      $category_items .= '<li><div><a href="viewer.php?category=' . $requested_category . '&filename=' . $file_name . '"><img src="' . $thumb_file_location . '" alt="' . $file_name . '"></a></div></li>';
+      $category_items .= '<li><div><a href="'. $file_link .'"><img src="' . $thumb_file_location . '" alt="' . $file_name . '"></a></div></li>';
     }
     ++$i;
   }
