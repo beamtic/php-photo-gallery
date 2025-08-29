@@ -3,13 +3,24 @@
 
 There is a live demo available at the website.
 
-**December 2023:**
+## August 2025 update:
 
-- Corrected an ancient bug that prevented creation of directories with numbers in them.
-- Added a Docker based developer environment that runs on localhost to simplify future updates.
+- Added a setup process
+- Switched to password_hash() instead of md5
+- Made it possible to upload images to the root "/" folder, so you no longer need to create categories to upload images
 
-I am still very busy with work, but will try and prioritize updating older personal projects. 
+**Known issues:**
 
+- Some strings are not translated. Will fix this soon.
+- Included files can be accessed directly (depending on server setup). Will fix soon.
+- "gallery/" is sometimes unwanted in the URL of images. It should just start from "/"..
+
+**to-do:**
+- Allow adding image titles and text descriptions
+- Allow uploading plain text files
+- Allow uploading video files
+- Add pagination
+- Improve the translation system
 
 ## Requirements
 The gallery requires GD library to, among other things, create thumbnails from uploaded images. Some hosts will already have this installed by default. If your host does not have it installed, it is recommend you either shift to cloud hosting, or find a shared host that does have it installed.
