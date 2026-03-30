@@ -83,14 +83,14 @@ if ($total_files >= 1) {
 
     if ($page > 1) {
       $prev_params = $base_params + ['page' => $page - 1];
-      $HTML_cup .= '<a class="prev" href="/?' . http_build_query($prev_params) . '">← Prev</a>';
+      $HTML_cup .= '<a class="prev" href="/?' . http_build_query($prev_params) . '">← ' . $translator->string('Prev') . '</a>';
     }
 
-    $HTML_cup .= '<span class="page-info">Page ' . $page . ' of ' . $total_pages . '</span>';
+    $HTML_cup .= '<span class="page-info">' . $translator->string('Page') . ' ' . $page . ' ' . $translator->string('of') . ' ' . $total_pages . '</span>';
 
     if ($page < $total_pages) {
       $next_params = $base_params + ['page' => $page + 1];
-      $HTML_cup .= '<a class="next" href="/?' . http_build_query($next_params) . '">Next →</a>';
+      $HTML_cup .= '<a class="next" href="/?' . http_build_query($next_params) . '">' . $translator->string('Next') . ' →</a>';
     }
 
     $HTML_cup .= '</nav>';

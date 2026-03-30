@@ -58,12 +58,12 @@
           </select>
         </div>
         <div class="setting">
-          <label for="pagination_enabled">Pagination:</label>
+          <label for="pagination_enabled"><?php echo $translator->string('Pagination:'); ?></label>
           <input type="checkbox" name="pagination_enabled" id="pagination_enabled" value="1"
             <?php echo !empty($settings['pagination_enabled']) ? 'checked' : ''; ?>>
         </div>
         <div class="setting">
-          <label for="pagination_per_page">Images per page:</label>
+          <label for="pagination_per_page"><?php echo $translator->string('Images per page:'); ?></label>
           <input type="number" name="pagination_per_page" id="pagination_per_page" min="1"
             value="<?php echo (int)($settings['pagination_per_page'] ?? 24); ?>">
         </div>
