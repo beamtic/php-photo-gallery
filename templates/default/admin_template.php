@@ -58,6 +58,15 @@
     </div>
   </div>
   <script>
+    (function clearDeleteParamFromUrl() {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('delete')) {
+        url.searchParams.delete('delete');
+        const query = url.searchParams.toString();
+        window.history.replaceState({}, '', url.pathname + (query ? '?' + query : ''));
+      }
+    })();
+
     async function uploadFile() {
       const fileInput = document.getElementById('fileToUpload');
       const categorySelect = document.querySelector('select[name="category"]');
@@ -104,6 +113,7 @@
 
       function showStatusMessage(msg) {
         let statusMessage = document.getElementById('action_status_message');
+        let container = statusMessage;
         if (!statusMessage) {
           const messageArea = document.getElementById('messageArea');
           container = document.createElement('div');
