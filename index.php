@@ -33,9 +33,27 @@ if ($cat_count >= 1 && $requested_category == null) {
 // Fetch the files in the category, and include them in an HTML ul list
 // >>>>>>>>>>>>>>>>>>>>
 $files = array_values(list_files($gallery_path));
-if (count($files) >= 1) {
+
+$pagination_enabled = !empty($settings['pagination_enabled']);
+$per_page = max(1, (int)($settings['pagination_per_page'] ?? 24));
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
+$total_files = count($files);
+$total_pages = $pagination_enabled ? (int)ceil($total_files / $per_page) : 1;
+
+if ($pagination_enabled) {
+  if ($page > $total_pages && $total_pages > 0) {
+    $page = $total_pages;
+  }
+  $offset = ($page - 1) * $per_page;
+  $files_to_render = array_slice($files, $offset, $per_page);
+} else {
+  $files_to_render = $files;
+}
+
+if ($total_files >= 1) {
   $HTML_cup .= '<ul id="images">';
-  foreach ($files as &$file_name) {
+  foreach ($files_to_render as &$file_name) {
     $category_preview_control = '';
     $delete_control = '';
     if (isset($_SESSION["password"])) {
@@ -54,6 +72,29 @@ if (count($files) >= 1) {
     $HTML_cup .= '<li><a href="' . $view_url . '"><img src="' . $public_path . $thumb_filename . '" alt="' . $file_name . '"></a>' . $delete_control . $category_preview_control . '</li>';
   }
   $HTML_cup .= '</ul>';
+
+  if ($pagination_enabled && $total_pages > 1) {
+    $base_params = [];
+    if (null !== $requested_category) {
+      $base_params['category'] = $requested_category;
+    }
+
+    $HTML_cup .= '<nav class="pagination">';
+
+    if ($page > 1) {
+      $prev_params = $base_params + ['page' => $page - 1];
+      $HTML_cup .= '<a class="prev" href="/?' . http_build_query($prev_params) . '">← Prev</a>';
+    }
+
+    $HTML_cup .= '<span class="page-info">Page ' . $page . ' of ' . $total_pages . '</span>';
+
+    if ($page < $total_pages) {
+      $next_params = $base_params + ['page' => $page + 1];
+      $HTML_cup .= '<a class="next" href="/?' . http_build_query($next_params) . '">Next →</a>';
+    }
+
+    $HTML_cup .= '</nav>';
+  }
 } elseif (($cat_count < 1 && $requested_category == null) || $requested_category !== null) {
   $HTML_cup = '<p>' . $translator->string('There are no files in:') . ' <b>' . ($requested_category ? space_or_dash('-', $requested_category) : '/') . '</b></p>';
 }
