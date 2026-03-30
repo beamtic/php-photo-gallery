@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $updatedSettings = [
     'lang' => !empty($_POST['lang']) ? $_POST['lang'] : 'en',
     'title' => !empty($_POST['title']) ? $_POST['title'] : 'Gallery',
-    'template' => !empty($_POST['template']) ? $_POST['template'] : 'default'
+    'template' => !empty($_POST['template']) ? $_POST['template'] : 'default',
+    'pagination_enabled' => !empty($_POST['pagination_enabled']),
+    'pagination_per_page' => !empty($_POST['pagination_per_page']) ? max(1, (int)$_POST['pagination_per_page']) : 24,
   ];
 
   // If file does not exist, require a password

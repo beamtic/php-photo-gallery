@@ -8,6 +8,7 @@
     .setting {
       padding: 0.2rem 0;
     }
+
     .setting label {
       width: 12rem;
       display: inline-block
@@ -36,7 +37,7 @@
               if ($langCode == $settings['lang']) {
                 $selectedOption = ' selected';
               }
-              echo '<option value="' . $langCode . '"'.$selectedOption.'>' . $languageName . '</option>';
+              echo '<option value="' . $langCode . '"' . $selectedOption . '>' . $languageName . '</option>';
               $selectedOption = '';
             }
             ?>
@@ -50,11 +51,21 @@
               if ($templateName == $settings['template']) {
                 $selectedOption = ' selected';
               }
-              echo '<option value="' . $templateName . '"'.$selectedOption.'>' . $templateName . '</option>';
+              echo '<option value="' . $templateName . '"' . $selectedOption . '>' . $templateName . '</option>';
               $selectedOption = '';
             }
             ?>
           </select>
+        </div>
+        <div class="setting">
+          <label for="pagination_enabled"><?php echo $translator->string('Pagination:'); ?></label>
+          <input type="checkbox" name="pagination_enabled" id="pagination_enabled" value="1"
+            <?php echo !empty($settings['pagination_enabled']) ? 'checked' : ''; ?>>
+        </div>
+        <div class="setting">
+          <label for="pagination_per_page"><?php echo $translator->string('Images per page:'); ?></label>
+          <input type="number" name="pagination_per_page" id="pagination_per_page" min="1"
+            value="<?php echo (int)($settings['pagination_per_page'] ?? 24); ?>">
         </div>
         <div class="setting">
           <label for="password"><?php echo $translator->string('Password:'); ?></label>

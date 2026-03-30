@@ -23,6 +23,13 @@ if (!file_exists($settingsFile)) {
     $password = $settings['password'];
 }
 
+if (!array_key_exists('pagination_enabled', $settings)) {
+    $settings['pagination_enabled'] = false;
+}
+if (!array_key_exists('pagination_per_page', $settings)) {
+    $settings['pagination_per_page'] = 24;
+}
+
 // If setup is requested
 if (isset($_GET['settings']) && $_GET['settings'] == true && file_exists($settingsFile)) {
     // When the settings file exists, require authentication to make changes
