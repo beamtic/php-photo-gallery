@@ -3,6 +3,11 @@
 
 There is a live demo available at the website.
 
+## Marts 2026 update:
+- Added a pagination feature
+- Added more translations
+- Translated more strings
+
 ## August 2025 update:
 
 - Added a setup process
@@ -11,7 +16,6 @@ There is a live demo available at the website.
 
 **Known issues:**
 
-- Some strings are not translated. Will fix this soon.
 - Included files can be accessed directly (depending on server setup). Will fix soon.
 - "gallery/" is sometimes unwanted in the URL of images. It should just start from "/"..
 
@@ -19,7 +23,6 @@ There is a live demo available at the website.
 - Allow adding image titles and text descriptions
 - Allow uploading plain text files
 - Allow uploading video files
-- Add pagination
 - Improve the translation system
 
 ## Requirements
